@@ -4,6 +4,7 @@
 (() => {
   const payload = window.INBOUND_DATA || { days: [], history: [], availableDates: [] };
   const issuePayload = window.INBOUND_ISSUES || { summary: {}, records: [] };
+  const dayLoaders = new Map();
   const params = new URLSearchParams(location.search);
   const brandColors = { "陈陈": "#6ee7d2", "鹭青一": "#9cc7ff", "周淼": "#e8c170", "未识别": "#ffb19b" };
   const businessTypes = ["成衣", "加工", "外采", "未标注"];
@@ -70,7 +71,7 @@
     return map;
   }, new Map());
 
-  function recordsForDateRange() {
+  function datesForCurrentRange() {
     if (!payload.days.length) return [];
     const selected = currentDay().date;
     let dates = [selected];
@@ -79,7 +80,54 @@
     if (state.range === "custom" && state.customStart && state.customEnd) {
       dates = payload.availableDates.filter(date => date >= state.customStart && date <= state.customEnd);
     }
+    return dates;
+  }
+
+  function weeklyTrendDates() {
+    const selectedIndex = Math.max(0, payload.availableDates.indexOf(state.selectedDate));
+    return payload.availableDates.slice(selectedIndex, selectedIndex + 7).reverse();
+  }
+
+  function recordsForDateRange() {
+    const dates = datesForCurrentRange();
     return payload.days.filter(day => dates.includes(day.date)).flatMap(day => day.records);
+  }
+
+  async function loadDayRecords(date) {
+    const day = dayByDate(date);
+    if (!date || !day || (Array.isArray(day.records) && day.records.length)) return true;
+    if (dayLoaders.has(date)) return dayLoaders.get(date);
+    const file = payload.recordFiles?.[date] || `../../assets/inbound/inbound-records-${date}.json`;
+    const loader = fetch(file)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        day.records = Array.isArray(data.records) ? data.records : [];
+        return true;
+      })
+      .catch(error => {
+        console.error(error);
+        day.records = [];
+        return false;
+      });
+    dayLoaders.set(date, loader);
+    return loader;
+  }
+
+  async function ensureCurrentRangeRecords() {
+    const dates = datesForCurrentRange();
+    if (!dates.length) return;
+    const statusNode = $("importStatus");
+    if (statusNode) statusNode.innerHTML = `<span>Loading ${dates.length} day(s)...</span>`;
+    await Promise.all(dates.map(loadDayRecords));
+  }
+
+  async function ensureWeeklyTrendRecords() {
+    const dates = weeklyTrendDates();
+    if (!dates.length) return;
+    await Promise.all(dates.map(loadDayRecords));
   }
 
   function filteredRecords() {
@@ -894,7 +942,11 @@
     history.replaceState(null, "", url);
   }
 
-  function render() {
+  let renderToken = 0;
+  async function render() {
+    const token = ++renderToken;
+    await ensureCurrentRangeRecords();
+    if (token !== renderToken) return;
     syncUrl();
     const day = currentDay();
     const rangeRecords = recordsForDateRange();
@@ -915,6 +967,9 @@
     renderSuppliers(rows);
     renderDetails(rows);
     renderIssuePanel();
+    ensureWeeklyTrendRecords().then(() => {
+      if (token === renderToken) renderWeeklyTrend();
+    });
   }
 
   function bindEvents() {
@@ -1137,4 +1192,3 @@
   bindEvents();
   render();
 })();
-

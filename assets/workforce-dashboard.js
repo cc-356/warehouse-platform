@@ -1,8 +1,8 @@
 (function () {
   const payloadNode = document.getElementById("report-data");
-  if (!payloadNode) return;
 
-  const payload = JSON.parse(payloadNode.textContent);
+  const payload = window.WORKFORCE_REPORT_DATA || (payloadNode ? JSON.parse(payloadNode.textContent) : null);
+  if (!payload) return;
   const history = [...(payload.history || [])].sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const historyByDate = new Map(history.map((item) => [item.date, item]));
   const totalPiecesMax = Math.max(...history.map((run) => (run.groups || []).reduce((sum, group) => sum + Number(group.totalPieces || 0), 0)), 1);
