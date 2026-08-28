@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>仓库运营管理平台 - 质量管理</title>
+  <title>仓储运营管理平台 - 质量管理</title>
   <style>
 
     :root {
@@ -221,10 +221,63 @@
     .filter-grid { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
     .field { display: grid; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 800; }
     .field select, .field input {
-      min-height: 36px; width: 100%; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px;
-      color: var(--ink); background: rgba(255,255,255,.045); outline: 0; color-scheme: dark;
+      min-height: 40px; width: 100%; padding: 0 34px 0 10px; border: 1px solid rgba(150,160,160,.28); border-radius: 8px;
+      color: rgba(248,252,250,.94);
+      background:
+        radial-gradient(ellipse at 16% 18%, rgba(255,255,255,.14) 0%, rgba(255,255,255,.045) 24%, transparent 48%),
+        radial-gradient(ellipse at 82% 78%, rgba(190,232,225,.075) 0%, rgba(190,232,225,.03) 28%, transparent 56%),
+        linear-gradient(115deg, transparent 0%, rgba(255,255,255,.12) 20%, rgba(255,255,255,.035) 34%, transparent 52%),
+        linear-gradient(90deg, transparent 0%, rgba(210,218,216,.035) 24%, rgba(238,244,242,.10) 50%, rgba(210,218,216,.035) 76%, transparent 100%),
+        linear-gradient(180deg, rgba(255,255,255,.28) 0 1px, rgba(255,255,255,.06) 2px, transparent 4px),
+        linear-gradient(0deg, rgba(210,220,218,.10) 0 1px, rgba(255,255,255,.04) 2px, transparent 5px),
+        linear-gradient(180deg, rgba(31,37,38,.92) 0%, rgba(103,113,113,.64) 18%, rgba(56,63,64,.82) 34%, rgba(22,28,29,.91) 58%, rgba(5,9,10,.96) 100%);
+      outline: 0; color-scheme: dark;
+      font-weight: 850;
+      text-shadow: 0 -1px 0 rgba(0,0,0,.70);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 0 2px 8px rgba(255,255,255,.055),
+        inset 1px 0 5px rgba(255,255,255,.055),
+        inset -1px 0 5px rgba(0,0,0,.48),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.075),
+        inset 0 0 14px rgba(190,232,225,.045),
+        0 2px 5px rgba(0,0,0,.28),
+        0 0 0 1px rgba(255,255,255,.035);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+      transition: border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease;
     }
-    .field select option { color: var(--ink); background: #101719; }
+    .field select {
+      appearance: none; -webkit-appearance: none;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpolygon points='7,3.6 11.2,7.8 2.8,7.8' fill='%23dce4e2'/%3E%3Cpolygon points='2.8,10.2 11.2,10.2 7,14.4' fill='%23dce4e2'/%3E%3C/svg%3E") calc(100% - 12px) 50% / 14px 18px no-repeat,
+        radial-gradient(ellipse at 16% 18%, rgba(255,255,255,.14) 0%, rgba(255,255,255,.045) 24%, transparent 48%),
+        radial-gradient(ellipse at 82% 78%, rgba(190,232,225,.075) 0%, rgba(190,232,225,.03) 28%, transparent 56%),
+        linear-gradient(115deg, transparent 0%, rgba(255,255,255,.12) 20%, rgba(255,255,255,.035) 34%, transparent 52%),
+        linear-gradient(90deg, transparent 0%, rgba(210,218,216,.035) 24%, rgba(238,244,242,.10) 50%, rgba(210,218,216,.035) 76%, transparent 100%),
+        linear-gradient(180deg, rgba(255,255,255,.28) 0 1px, rgba(255,255,255,.06) 2px, transparent 4px),
+        linear-gradient(0deg, rgba(210,220,218,.10) 0 1px, rgba(255,255,255,.04) 2px, transparent 5px),
+        linear-gradient(180deg, rgba(31,37,38,.92) 0%, rgba(103,113,113,.64) 18%, rgba(56,63,64,.82) 34%, rgba(22,28,29,.91) 58%, rgba(5,9,10,.96) 100%);
+    }
+    .field select:hover, .field input:hover {
+      border-color: rgba(170,182,180,.34);
+      filter: brightness(1.08);
+    }
+    .field select:focus, .field input:focus {
+      border-color: rgba(190,232,225,.48);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 1px 0 4px rgba(255,255,255,.06),
+        inset -1px 0 5px rgba(0,0,0,.48),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.06),
+        inset 0 0 16px rgba(190,232,225,.055),
+        0 0 0 2px rgba(190,232,225,.16),
+        0 2px 6px rgba(0,0,0,.32);
+    }
+    .field select option { color: var(--ink); background: #11191b; }
+    .field select option:checked, .field select option:hover { background: #1f5f55; }
     .active-filters { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
     .tag, .risk-tag {
       display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 5px 9px; border-radius: 999px;
@@ -247,6 +300,64 @@
     .delta.up.neutral { color: var(--accent-strong); }
     .delta.down.good { color: var(--ok); }
     .delta.none { color: var(--muted); }
+    .average-panel { display: grid; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(210,235,225,.16); }
+    .average-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; justify-content: flex-end; }
+    .average-control { display: grid; gap: 5px; min-width: 92px; }
+    .average-label { color: var(--muted); font-size: 12px; font-weight: 800; }
+    .average-picker { position: relative; }
+    .average-trigger {
+      width: 100%; min-height: 34px; padding: 6px 30px 6px 10px; border: 1px solid rgba(150,160,160,.28); border-radius: 8px;
+      color: rgba(248,252,250,.94); text-align: left; font-size: 13px; font-weight: 850;
+      background:
+        radial-gradient(ellipse at 16% 18%, rgba(255,255,255,.14) 0%, rgba(255,255,255,.045) 24%, transparent 48%),
+        linear-gradient(115deg, transparent 0%, rgba(255,255,255,.12) 20%, rgba(255,255,255,.035) 34%, transparent 52%),
+        linear-gradient(180deg, rgba(255,255,255,.28) 0 1px, rgba(255,255,255,.06) 2px, transparent 4px),
+        linear-gradient(180deg, rgba(31,37,38,.92) 0%, rgba(103,113,113,.64) 18%, rgba(56,63,64,.82) 34%, rgba(22,28,29,.91) 58%, rgba(5,9,10,.96) 100%);
+      text-shadow: 0 -1px 0 rgba(0,0,0,.70);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.075),
+        0 2px 5px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+    .average-trigger::after {
+      content: ""; position: absolute; right: 10px; top: 50%; width: 14px; height: 18px; transform: translateY(-50%);
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpolygon points='7,3.6 11.2,7.8 2.8,7.8' fill='%23dce4e2'/%3E%3Cpolygon points='2.8,10.2 11.2,10.2 7,14.4' fill='%23dce4e2'/%3E%3C/svg%3E") center / 14px 18px no-repeat;
+      pointer-events: none;
+    }
+    .average-picker.is-open .average-trigger {
+      border-color: rgba(190,232,225,.48); filter: brightness(1.08);
+      box-shadow:
+        0 0 0 2px rgba(190,232,225,.16),
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.06),
+        0 2px 6px rgba(0,0,0,.32);
+    }
+    .average-menu {
+      position: absolute; right: 0; top: calc(100% + 7px); z-index: 30; display: none;
+      min-width: 150px; max-height: 260px; overflow: auto; padding: 7px;
+      border: 1px solid rgba(110,231,210,.34); border-radius: 12px;
+      background: #101719; box-shadow: 0 18px 44px rgba(0,0,0,.48);
+    }
+    .average-picker.is-open .average-menu { display: grid; gap: 5px; }
+    .average-option {
+      min-height: 34px; border: 1px solid transparent; border-radius: 9px; padding: 7px 10px;
+      color: var(--ink); background: transparent; text-align: left; font-size: 13px; font-weight: 800;
+    }
+    .average-option:hover, .average-option.is-active {
+      color: #061311; background: var(--accent); border-color: transparent;
+    }
+    .average-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .average-card { min-width: 0; padding: 12px 14px; border: 1px solid rgba(210,235,225,.18); border-radius: 12px; background: rgba(255,255,255,.04); }
+    .average-card span { display: block; color: var(--muted); font-size: 12px; }
+    .average-card strong { display: block; margin-top: 6px; color: var(--ink); font-size: 24px; line-height: 1.1; overflow-wrap: anywhere; }
+    .average-card .delta { min-height: 20px; }
+    .rank-panel { display: grid; align-content: start; }
+    .rank-panel > .panel-head { margin-top: 0; }
+    .rank-panel .chart { min-height: 220px; }
     .grid-2 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 16px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
     .chart {
@@ -315,6 +426,10 @@
       .platform-actions, .hero-meta { justify-content: flex-start; }
       .hero, .panel { padding: 18px; }
       .metrics-grid, .filter-grid { grid-template-columns: 1fr; }
+      .average-grid { grid-template-columns: 1fr; }
+      .average-controls { justify-content: stretch; }
+      .average-control { min-width: 0; flex: 1 1 120px; }
+      .average-menu { left: 0; right: auto; min-width: 100%; }
       .change-row { grid-template-columns: 1fr; }
       .brand-stats { grid-template-columns: 1fr; }
     }
@@ -327,7 +442,7 @@
       <div class="platform-identity">
         <img class="platform-mark" src="../../assets/jingtang-warehouse-logo-clear.png" alt="井唐仓储" />
         <div class="platform-title">
-          <strong>仓库运营管理平台</strong>
+          <strong>仓储运营管理平台</strong>
           <div class="platform-breadcrumb"><span>运营驾驶舱</span><span>/</span><span>质量管理</span></div>
         </div>
       </div>
@@ -378,7 +493,8 @@
           </div>
           <div class="chart" data-chart="trend"></div>
         </section>
-        <section class="panel">
+        <section class="panel rank-panel">
+          <div data-average-complaints></div>
           <div class="panel-head"><div><span class="panel-label">Ranking</span><h2>品牌客诉率排行</h2></div></div>
           <div class="chart" data-chart="complaint-rank"></div>
         </section>
@@ -461,13 +577,20 @@
   const latestMonth = allMonths[allMonths.length - 1] || "";
   const previousMonth = allMonths[allMonths.length - 2] || "";
   const latestMonthMatch = latestMonth.match(/(\d{4})年(\d{1,2})月/);
-  const state = { month: latestMonth, monthYear: Number(latestMonthMatch?.[1] || new Date().getFullYear()), brand: "全部", metric: "全部", risk: "全部", trendBrand: "全部", sort: { key: "month", dir: "desc" }, hiddenColumns: new Set() };
+  const allYears = [...new Set(allMonths.map((month) => monthParts(month)?.year).filter(Boolean))].sort((a, b) => a - b);
+  const latestYear = Number(latestMonthMatch?.[1] || allYears[allYears.length - 1] || new Date().getFullYear());
+  const latestMonthNumber = Number(latestMonthMatch?.[2] || 12);
+  const state = { month: latestMonth, monthYear: latestYear, averageBrand: "全部", averageYear: latestYear, averageStartMonth: 1, averageEndMonth: latestMonthNumber, brand: "全部", metric: "全部", risk: "全部", trendBrand: "全部", sort: { key: "month", dir: "desc" }, hiddenColumns: new Set() };
   const els = {};
 
+  function monthParts(month) {
+    const match = String(month || "").match(/(\d{4})年(\d{1,2})月/);
+    return match ? { year: Number(match[1]), month: Number(match[2]) } : null;
+  }
   function compareMonth(a, b) {
-    const ma = String(a).match(/(\d{4})年(\d{1,2})月/);
-    const mb = String(b).match(/(\d{4})年(\d{1,2})月/);
-    return (Number(ma?.[1] || 0) * 12 + Number(ma?.[2] || 0)) - (Number(mb?.[1] || 0) * 12 + Number(mb?.[2] || 0));
+    const ma = monthParts(a);
+    const mb = monthParts(b);
+    return (Number(ma?.year || 0) * 12 + Number(ma?.month || 0)) - (Number(mb?.year || 0) * 12 + Number(mb?.month || 0));
   }
   const nf = new Intl.NumberFormat("zh-CN");
   const pf = new Intl.NumberFormat("zh-CN", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -526,6 +649,41 @@
   function brandSummary(month, brand) {
     return enrich(sumRecords(getRecords({ month, brand })));
   }
+  function monthsInRange(year, startMonth, endMonth) {
+    const start = Math.min(Number(startMonth), Number(endMonth));
+    const end = Math.max(Number(startMonth), Number(endMonth));
+    return allMonths.filter((month) => {
+      const parts = monthParts(month);
+      return parts && parts.year === Number(year) && parts.month >= start && parts.month <= end;
+    });
+  }
+  function aggregateMonths(months, brand = state.brand) {
+    const records = months.flatMap((month) => getRecords({ month, brand }));
+    return enrich(sumRecords(records));
+  }
+  function aggregateAverageMonths(months, brand = state.brand) {
+    const records = months.flatMap((month) => getRecords({ month, brand }));
+    const complaintRows = records.filter((record) => record.complaints !== null && record.complaints !== undefined);
+    const inspectionRows = records.filter((record) => record.inspectionIssues !== null && record.inspectionIssues !== undefined);
+    const complaintSummary = complaintRows.reduce((summary, record) => {
+      summary.shipments += Number(record.shipments || 0);
+      summary.complaints += Number(record.complaints || 0);
+      summary.months.add(record.month);
+      return summary;
+    }, { shipments: 0, complaints: 0, months: new Set() });
+    const inspectionSummary = inspectionRows.reduce((summary, record) => {
+      summary.shipments += Number(record.shipments || 0);
+      summary.inspectionIssues += Number(record.inspectionIssues || 0);
+      summary.months.add(record.month);
+      return summary;
+    }, { shipments: 0, inspectionIssues: 0, months: new Set() });
+    return {
+      complaintRate: rate(complaintSummary.complaints, complaintSummary.shipments),
+      inspectionRate: rate(inspectionSummary.inspectionIssues, inspectionSummary.shipments),
+      complaintMonthCount: complaintSummary.months.size,
+      inspectionMonthCount: inspectionSummary.months.size,
+    };
+  }
   function statusFilteredBrands(month = state.month) {
     return allBrands.filter((brand) => {
       const risk = riskOf(brandSummary(month, brand)).key;
@@ -569,6 +727,7 @@
       risk: document.querySelector("[data-filter='risk']"),
       active: document.querySelector("[data-active-filters]"),
       metrics: document.querySelector("[data-metrics]"),
+      average: document.querySelector("[data-average-complaints]"),
       trend: document.querySelector("[data-chart='trend']"),
       complaintRank: document.querySelector("[data-chart='complaint-rank']"),
       inspectionRank: document.querySelector("[data-chart='inspection-rank']"),
@@ -608,6 +767,26 @@
         }
         renderAll();
       });
+    });
+    els.average?.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-average-toggle]");
+      const option = event.target.closest("[data-average-option]");
+      if (trigger) {
+        const picker = trigger.closest(".average-picker");
+        const willOpen = !picker.classList.contains("is-open");
+        closeAverageMenus();
+        picker.classList.toggle("is-open", willOpen);
+        trigger.setAttribute("aria-expanded", String(willOpen));
+        return;
+      }
+      if (option) {
+        state[option.dataset.averageFilter] = option.dataset.averageFilter === "averageBrand" ? option.dataset.averageValue : Number(option.dataset.averageValue);
+        closeAverageMenus();
+        renderAverage();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!els.average?.contains(event.target)) closeAverageMenus();
     });
     if (els.monthPanelToggle && els.monthSidebar) {
       els.monthPanelToggle.addEventListener("click", () => {
@@ -665,6 +844,7 @@
       renderMonthNavigator();
       renderActiveFilters();
       renderMetrics();
+      renderAverage();
       renderTrend();
       renderComplaintRank();
       renderInspectionRank();
@@ -756,6 +936,52 @@
     ].filter((card) => card.metric === "全部" || state.metric === "全部" || state.metric === card.metric);
     els.metrics.innerHTML = cards.map((card) => `<article class="metric-card"><span>${card.label}</span><strong>${card.value}</strong><div class="delta ${card.tone === "bad" ? "up bad" : card.tone === "good" ? "down good" : card.tone === "none" ? "none" : "up neutral"}">${card.tone === "bad" ? "▲" : card.tone === "good" ? "▼" : "◆"} ${card.delta}</div></article>`).join("");
   }
+  function renderAverage() {
+    if (!els.average) return;
+    const year = Number(state.averageYear || latestYear);
+    const startMonth = Number(state.averageStartMonth || 1);
+    const endMonth = Number(state.averageEndMonth || latestMonthNumber);
+    const averageBrand = state.averageBrand || "全部";
+    const currentMonths = monthsInRange(year, startMonth, endMonth);
+    const previousMonths = monthsInRange(year - 1, startMonth, endMonth);
+    const current = aggregateAverageMonths(currentMonths, averageBrand);
+    const previous = previousMonths.length ? aggregateAverageMonths(previousMonths, averageBrand) : null;
+    const picker = (label, key, value, options, suffix) => `<div class="average-control">
+      <span class="average-label">${label}</span>
+      <div class="average-picker">
+        <button class="average-trigger" type="button" data-average-toggle="${key}" aria-expanded="false">${value}${suffix}</button>
+        <div class="average-menu" role="menu">
+          ${options.map((item) => `<button class="average-option ${String(item) === String(value) ? "is-active" : ""}" type="button" role="menuitem" data-average-option data-average-filter="${key}" data-average-value="${item}">${item}${suffix}</button>`).join("")}
+        </div>
+      </div>
+    </div>`;
+    const rateTone = !previous ? "none" : current.complaintRate > previous.complaintRate ? "bad" : "good";
+    const inspectionTone = !previous ? "none" : current.inspectionRate > previous.inspectionRate ? "bad" : "good";
+    const deltaClass = (tone) => tone === "bad" ? "up bad" : tone === "good" ? "down good" : "none";
+    const deltaIcon = (tone) => tone === "bad" ? "▲" : tone === "good" ? "▼" : "◆";
+    const compareLabel = previous ? `${year - 1}年同期` : `${year - 1}年暂无同期`;
+    els.average.innerHTML = `<div class="average-panel">
+      <div class="panel-head">
+        <div><span class="panel-label">Average</span><h2>平均客诉</h2></div>
+        <div class="average-controls">
+          ${picker("品牌", "averageBrand", averageBrand, ["全部", ...allBrands], "")}
+          ${picker("年份", "averageYear", year, allYears, "年")}
+          ${picker("开始月份", "averageStartMonth", startMonth, Array.from({ length: 12 }, (_, index) => index + 1), "月")}
+          ${picker("结束月份", "averageEndMonth", endMonth, Array.from({ length: 12 }, (_, index) => index + 1), "月")}
+        </div>
+      </div>
+      <div class="average-grid">
+        <article class="average-card"><span>${year}年平均综合客诉率</span><strong>${pct(current.complaintRate)}</strong><div class="delta ${deltaClass(rateTone)}">${deltaIcon(rateTone)} ${previous ? rateChangeText(current.complaintRate, previous.complaintRate) : compareLabel}，${current.complaintMonthCount}个月有客诉数据</div></article>
+        <article class="average-card"><span>${year}年平均质检问题率</span><strong>${pct(current.inspectionRate)}</strong><div class="delta ${deltaClass(inspectionTone)}">${deltaIcon(inspectionTone)} ${previous ? rateChangeText(current.inspectionRate, previous.inspectionRate) : compareLabel}，${current.inspectionMonthCount}个月有质检数据</div></article>
+      </div>
+    </div>`;
+  }
+  function closeAverageMenus() {
+    document.querySelectorAll(".average-picker.is-open").forEach((picker) => {
+      picker.classList.remove("is-open");
+      picker.querySelector("[data-average-toggle]")?.setAttribute("aria-expanded", "false");
+    });
+  }
   function trendRecords() {
     const endMonth = state.month === "全部" ? latestMonth : state.month;
     const endIndex = Math.max(0, allMonths.indexOf(endMonth));
@@ -833,10 +1059,10 @@
     const month = state.month === "全部" ? latestMonth : state.month;
     const rows = allBrands.map((brand) => ({ brand, ...brandSummary(month, brand) })).sort((a, b) => b.complaintRate - a.complaintRate);
     const max = Math.max(...rows.map((r) => r.complaintRate), thresholds.warningComplaintRate) * 1.12;
-    els.complaintRank.innerHTML = `<svg viewBox="0 0 620 230" role="img" aria-label="品牌客诉率排行">
-      <line x1="${120 + thresholds.warningComplaintRate / max * 430}" x2="${120 + thresholds.warningComplaintRate / max * 430}" y1="22" y2="194" stroke="var(--risk)" stroke-dasharray="4 4" />
+    els.complaintRank.innerHTML = `<svg viewBox="0 0 620 200" role="img" aria-label="品牌客诉率排行">
+      <line x1="${120 + thresholds.warningComplaintRate / max * 430}" x2="${120 + thresholds.warningComplaintRate / max * 430}" y1="22" y2="164" stroke="var(--risk)" stroke-dasharray="4 4" />
       <text x="${124 + thresholds.warningComplaintRate / max * 430}" y="18" fill="var(--risk)" font-size="12">预警线 2%</text>
-      ${rows.map((r, i) => `<g data-brand="${r.brand}" class="clickable-bar"><text x="14" y="${54+i*52}" fill="#c9fff4" font-size="13">${r.brand}</text><rect x="120" y="${36+i*52}" width="${Math.max(4, r.complaintRate / max * 430)}" height="22" rx="8" fill="var(--complaint)" data-tip="${r.brand}｜发货 ${fmtNum(r.shipments)}｜客诉 ${fmtNum(r.complaints)}｜客诉率 ${pct(r.complaintRate)}"></rect><text x="${130 + r.complaintRate / max * 430}" y="${53+i*52}" fill="#eef5f1" font-size="13">${pct(r.complaintRate)}</text></g>`).join("")}
+      ${rows.map((r, i) => `<g data-brand="${r.brand}" class="clickable-bar"><text x="14" y="${50+i*44}" fill="#c9fff4" font-size="13">${r.brand}</text><rect x="120" y="${34+i*44}" width="${Math.max(4, r.complaintRate / max * 430)}" height="20" rx="8" fill="var(--complaint)" data-tip="${r.brand}｜发货 ${fmtNum(r.shipments)}｜客诉 ${fmtNum(r.complaints)}｜客诉率 ${pct(r.complaintRate)}"></rect><text x="${130 + r.complaintRate / max * 430}" y="${50+i*44}" fill="#eef5f1" font-size="13">${pct(r.complaintRate)}</text></g>`).join("")}
     </svg>`;
     els.complaintRank.querySelectorAll("[data-brand]").forEach((node) => node.addEventListener("click", () => setBrand(node.dataset.brand)));
     bindTooltips(els.complaintRank);

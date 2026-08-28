@@ -820,8 +820,8 @@
     .issue-panel { display: grid; gap: 14px; }
     .issue-toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
     .issue-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-    .issue-metric { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035); display: grid; gap: 4px; }
-    .issue-metric span { color: var(--muted); font-size: 12px; font-weight: 800; }
+    .issue-metric { min-width: 0; padding: 12px 10px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035); display: grid; gap: 4px; }
+    .issue-metric span { color: var(--muted); font-size: 12px; font-weight: 800; white-space: nowrap; }
     .issue-metric strong { color: var(--accent-strong); font-size: 20px; line-height: 1.15; }
     .issue-filters { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .issue-filters select, .issue-filters input, .issue-clear-button { min-height: 38px; max-width: 180px; }
@@ -905,7 +905,9 @@
       .insight-grid { grid-template-columns: 1fr; }
       .style-row { grid-template-columns: 1fr; align-items: start; }
       .issue-toolbar { grid-template-columns: 1fr; }
-      .issue-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .issue-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+      .issue-metric { padding: 10px 8px; }
+      .issue-metric span { font-size: 11px; }
       .issue-filters { justify-content: stretch; }
       .issue-filters select, .issue-filters input { max-width: none; flex: 1 1 160px; }
       .issue-card { grid-template-columns: 1fr; }
@@ -1135,6 +1137,7 @@
           <div class="issue-filters">
             <select id="issueBrand" aria-label="Issue brand"></select>
             <select id="issueAttribute" aria-label="问题属性"></select>
+            <select id="issueDate" aria-label="问题日期"></select>
             <select id="issueFactory" aria-label="问题工厂"></select>
             <label class="issue-page-size">每页
               <select id="issuePageSize" aria-label="问题记录每页数量">

@@ -1,7 +1,8 @@
 (function () {
   const payloadNode = document.getElementById("report-data");
-  const payload = window.WORKFORCE_REPORT_DATA || (payloadNode ? JSON.parse(payloadNode.textContent) : null);
-  if (!payload) return;
+  if (!payloadNode) return;
+
+  const payload = JSON.parse(payloadNode.textContent);
   const history = [...(payload.history || [])].sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const historyByDate = new Map(history.map((item) => [item.date, item]));
   const totalPiecesMax = Math.max(...history.map((run) => (run.groups || []).reduce((sum, group) => sum + Number(group.totalPieces || 0), 0)), 1);
@@ -432,8 +433,8 @@
           '</aside>' +
           '<section class="dashboard-column center-column">' +
             '<section class="dashboard-section overview-section"><div class="section-label"><span>核心总览</span><em>OVERVIEW</em></div><div class="metric-grid" id="metric-grid"></div></section>' +
-            TechPanel("员工人效总览", "COMMAND CENTER", '<div class="command-center"><div id="completion-ring" class="focus-orbit"></div><div id="summary-grid" class="summary-grid"></div></div>', "command-center-panel tone-cyan") +
             TechPanel("异常提醒", "ALERT", '<div class="panel-head"><span id="status-pill" class="status-pill">加载中</span></div><div id="notes"></div>', "alert-panel tone-amber") +
+            TechPanel("员工人效总览", "COMMAND CENTER", '<div class="command-center"><div id="completion-ring" class="focus-orbit"></div><div id="summary-grid" class="summary-grid"></div></div>', "command-center-panel tone-cyan") +
           '</section>' +
           '<aside class="dashboard-column right-column">' +
             TechPanel("考勤覆盖", "ATTENDANCE", '<div id="attendance-panel"></div>', "support-panel tone-green") +

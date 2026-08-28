@@ -4,7 +4,6 @@
 (() => {
   const payload = window.INBOUND_DATA || { days: [], history: [], availableDates: [] };
   const issuePayload = window.INBOUND_ISSUES || { summary: {}, records: [] };
-  const dayLoaders = new Map();
   const params = new URLSearchParams(location.search);
   const brandColors = { "陈陈": "#6ee7d2", "鹭青一": "#9cc7ff", "周淼": "#e8c170", "未识别": "#ffb19b" };
   const businessTypes = ["成衣", "加工", "外采", "未标注"];
@@ -32,6 +31,7 @@
     pageSize: 20,
     issueBrand: "",
     issueAttribute: "",
+    issueDate: "",
     issueFactory: "",
     issueKeyword: "",
     issuePage: 1,
@@ -70,7 +70,7 @@
     return map;
   }, new Map());
 
-  function datesForCurrentRange() {
+  function recordsForDateRange() {
     if (!payload.days.length) return [];
     const selected = currentDay().date;
     let dates = [selected];
@@ -79,54 +79,7 @@
     if (state.range === "custom" && state.customStart && state.customEnd) {
       dates = payload.availableDates.filter(date => date >= state.customStart && date <= state.customEnd);
     }
-    return dates;
-  }
-
-  function weeklyTrendDates() {
-    const selectedIndex = Math.max(0, payload.availableDates.indexOf(state.selectedDate));
-    return payload.availableDates.slice(selectedIndex, selectedIndex + 7).reverse();
-  }
-
-  function recordsForDateRange() {
-    const dates = datesForCurrentRange();
     return payload.days.filter(day => dates.includes(day.date)).flatMap(day => day.records);
-  }
-
-  async function loadDayRecords(date) {
-    const day = dayByDate(date);
-    if (!date || !day || (Array.isArray(day.records) && day.records.length)) return true;
-    if (dayLoaders.has(date)) return dayLoaders.get(date);
-    const file = payload.recordFiles?.[date] || `../../assets/inbound/inbound-records-${date}.json`;
-    const loader = fetch(file)
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
-      .then(data => {
-        day.records = Array.isArray(data.records) ? data.records : [];
-        return true;
-      })
-      .catch(error => {
-        console.error(error);
-        day.records = [];
-        return false;
-      });
-    dayLoaders.set(date, loader);
-    return loader;
-  }
-
-  async function ensureCurrentRangeRecords() {
-    const dates = datesForCurrentRange();
-    if (!dates.length) return;
-    const statusNode = $("importStatus");
-    if (statusNode) statusNode.innerHTML = `<span>???? ${dates.length} ?????...</span>`;
-    await Promise.all(dates.map(loadDayRecords));
-  }
-
-  async function ensureWeeklyTrendRecords() {
-    const dates = weeklyTrendDates();
-    if (!dates.length) return;
-    await Promise.all(dates.map(loadDayRecords));
   }
 
   function filteredRecords() {
@@ -138,6 +91,7 @@
     let rows = [...(issuePayload.records || [])];
     if (state.issueBrand) rows = rows.filter(row => (row.brand || "未标注") === state.issueBrand);
     if (state.issueAttribute) rows = rows.filter(row => (row.attribute || "未标注") === state.issueAttribute);
+    if (state.issueDate) rows = rows.filter(row => row.date === state.issueDate);
     if (state.issueFactory) rows = rows.filter(row => (row.factory || "未标注") === state.issueFactory);
     if (state.issueKeyword) {
       const keyword = state.issueKeyword.trim();
@@ -779,10 +733,15 @@
     const brands = uniq(all.map(row => row.brand || "未标注"));
     const brandRows = all.filter(row => !state.issueBrand || (row.brand || "未标注") === state.issueBrand);
     const attributes = uniq(brandRows.map(row => row.attribute || "未标注"));
+    const dateRows = brandRows.filter(row => !state.issueAttribute || row.attribute === state.issueAttribute);
+    const issueDates = uniq(dateRows.map(row => row.date)).sort().reverse();
+    if (state.issueDate && !issueDates.includes(state.issueDate)) state.issueDate = "";
     const factories = uniq(all
       .filter(row => !state.issueBrand || (row.brand || "未标注") === state.issueBrand)
       .filter(row => !state.issueAttribute || row.attribute === state.issueAttribute)
+      .filter(row => !state.issueDate || row.date === state.issueDate)
       .map(row => row.factory || "未标注"));
+    if (state.issueFactory && !factories.includes(state.issueFactory)) state.issueFactory = "";
     const imageCount = records.reduce((sum, row) => sum + (row.images || []).length, 0);
     const styleCount = uniq(records.map(row => row.styleNo)).length;
     const factoryCount = uniq(records.map(row => row.factory)).length;
@@ -797,6 +756,8 @@
     $("issueBrand").value = state.issueBrand;
     $("issueAttribute").innerHTML = `<option value="">全部属性</option>${attributes.map(item => `<option value="${esc(item)}">${esc(item)}</option>`).join("")}`;
     $("issueAttribute").value = state.issueAttribute;
+    $("issueDate").innerHTML = `<option value="">全部日期</option>${issueDates.map(item => `<option value="${esc(item)}">${esc(item)}</option>`).join("")}`;
+    $("issueDate").value = state.issueDate;
     $("issueFactory").innerHTML = `<option value="">全部工厂</option>${factories.map(item => `<option value="${esc(item)}">${esc(item)}</option>`).join("")}`;
     $("issueFactory").value = state.issueFactory;
     $("issueKeyword").value = state.issueKeyword;
@@ -933,11 +894,7 @@
     history.replaceState(null, "", url);
   }
 
-  let renderToken = 0;
-  async function render() {
-    const token = ++renderToken;
-    await ensureCurrentRangeRecords();
-    if (token !== renderToken) return;
+  function render() {
     syncUrl();
     const day = currentDay();
     const rangeRecords = recordsForDateRange();
@@ -958,9 +915,6 @@
     renderSuppliers(rows);
     renderDetails(rows);
     renderIssuePanel();
-    ensureWeeklyTrendRecords().then(() => {
-      if (token === renderToken) renderWeeklyTrend();
-    });
   }
 
   function bindEvents() {
@@ -1094,14 +1048,16 @@
     });
     $("keyword").addEventListener("input", event => { state.notice = ""; state.keyword = event.target.value; state.page = 1; render(); });
     $("businessFilter").addEventListener("change", event => { state.notice = ""; state.businessType = event.target.value; state.page = 1; render(); });
-    $("issueBrand").addEventListener("change", event => { state.issueBrand = event.target.value; state.issueFactory = ""; state.issuePage = 1; render(); });
-    $("issueAttribute").addEventListener("change", event => { state.issueAttribute = event.target.value; state.issueFactory = ""; state.issuePage = 1; render(); });
+    $("issueBrand").addEventListener("change", event => { state.issueBrand = event.target.value; state.issuePage = 1; render(); });
+    $("issueAttribute").addEventListener("change", event => { state.issueAttribute = event.target.value; state.issuePage = 1; render(); });
+    $("issueDate").addEventListener("change", event => { state.issueDate = event.target.value; state.issueFactory = ""; state.issuePage = 1; render(); });
     $("issueFactory").addEventListener("change", event => { state.issueFactory = event.target.value; state.issuePage = 1; render(); });
     $("issueKeyword").addEventListener("input", event => { state.issueKeyword = event.target.value.trim(); state.issuePage = 1; render(); });
     $("issuePageSize").addEventListener("change", event => { state.issuePageSize = Number(event.target.value) || 5; state.issuePage = 1; render(); });
     $("issueClearFilters").addEventListener("click", () => {
       state.issueBrand = "";
       state.issueAttribute = "";
+      state.issueDate = "";
       state.issueFactory = "";
       state.issueKeyword = "";
       state.issuePageSize = 5;
