@@ -573,8 +573,8 @@
     .brand-metrics strong { display: block; margin-top: 2px; color: var(--ink); font-size: 20px; line-height: 1.05; white-space: nowrap; }
     .two-col { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); gap: 18px; align-items: stretch; }
     .three-col { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
-    .insight-board { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); gap: 18px; align-items: start; }
-    .insight-column { min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .insight-board { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); gap: 18px; align-items: stretch; }
+    .insight-column { min-width: 0; display: grid; gap: 12px; align-content: stretch; }
     .chart {
       min-height: 220px;
       padding: 12px;
@@ -721,7 +721,8 @@
         animation: none !important;
       }
     }
-    .insight-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    .insight-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; align-items: start; }
+    .order-structure-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .insight-card {
       min-width: 0;
       padding: 11px;
@@ -735,7 +736,15 @@
     .insight-card span { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
     .insight-card strong { display: block; margin-top: 5px; color: var(--ink); font-size: 21px; line-height: 1.05; white-space: nowrap; }
     .insight-card small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.35; }
-    .style-list { display: grid; gap: 7px; }
+    .order-buckets { grid-column: 1 / -1; }
+    .bucket-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 14px; margin-top: 10px; }
+    .bucket-row { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--module-border-soft); color: var(--muted); font-size: 12px; }
+    .bucket-row:nth-last-child(-n+2) { border-bottom: 0; }
+    .bucket-row strong { color: var(--ink); font-size: 20px; line-height: 1.05; white-space: nowrap; }
+    .bucket-row small { color: var(--muted); font-size: 12px; font-weight: 850; }
+    .style-panel { height: 100%; display: flex; flex-direction: column; }
+    .style-panel .style-list { flex: 1 1 auto; min-height: 0; }
+    .style-list { display: grid; gap: 7px; max-height: none; overflow: auto; padding-right: 4px; align-content: start; }
     .style-row {
       display: grid;
       grid-template-columns: minmax(120px, 1fr) minmax(120px, 1.2fr) minmax(92px, auto);
@@ -761,28 +770,54 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.05), var(--module-shadow-soft);
     }
     .matrix table { min-width: 520px; }
-    .matrix, .table-wrap, .active-filters, .filter-sidebar form, .drawer {
+    .matrix-value {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      white-space: nowrap;
+    }
+    .matrix-value strong {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+    .matrix-share {
+      min-height: 23px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--accent-strong);
+      background: rgba(110, 231, 210, 0.085);
+      border: 1px solid rgba(110, 231, 210, 0.16);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1;
+    }
+    .matrix, .table-wrap, .style-list, .active-filters, .filter-sidebar form, .drawer {
       scrollbar-width: thin;
       scrollbar-color: rgba(138, 168, 178, .56) transparent;
     }
-    .matrix::-webkit-scrollbar, .table-wrap::-webkit-scrollbar, .active-filters::-webkit-scrollbar, .filter-sidebar form::-webkit-scrollbar, .drawer::-webkit-scrollbar {
+    .matrix::-webkit-scrollbar, .table-wrap::-webkit-scrollbar, .style-list::-webkit-scrollbar, .active-filters::-webkit-scrollbar, .filter-sidebar form::-webkit-scrollbar, .drawer::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
-    .matrix::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track, .active-filters::-webkit-scrollbar-track, .filter-sidebar form::-webkit-scrollbar-track, .drawer::-webkit-scrollbar-track {
+    .matrix::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track, .style-list::-webkit-scrollbar-track, .active-filters::-webkit-scrollbar-track, .filter-sidebar form::-webkit-scrollbar-track, .drawer::-webkit-scrollbar-track {
       background: transparent;
     }
-    .matrix::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb, .active-filters::-webkit-scrollbar-thumb, .filter-sidebar form::-webkit-scrollbar-thumb, .drawer::-webkit-scrollbar-thumb {
+    .matrix::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb, .style-list::-webkit-scrollbar-thumb, .active-filters::-webkit-scrollbar-thumb, .filter-sidebar form::-webkit-scrollbar-thumb, .drawer::-webkit-scrollbar-thumb {
       border: 2px solid transparent;
       border-radius: 999px;
       background: rgba(138, 168, 178, .50);
       background-clip: padding-box;
     }
-    .matrix::-webkit-scrollbar-thumb:hover, .table-wrap::-webkit-scrollbar-thumb:hover, .active-filters::-webkit-scrollbar-thumb:hover, .filter-sidebar form::-webkit-scrollbar-thumb:hover, .drawer::-webkit-scrollbar-thumb:hover {
+    .matrix::-webkit-scrollbar-thumb:hover, .table-wrap::-webkit-scrollbar-thumb:hover, .style-list::-webkit-scrollbar-thumb:hover, .active-filters::-webkit-scrollbar-thumb:hover, .filter-sidebar form::-webkit-scrollbar-thumb:hover, .drawer::-webkit-scrollbar-thumb:hover {
       background: rgba(141, 236, 220, .62);
       background-clip: padding-box;
     }
-    .matrix::-webkit-scrollbar-corner, .table-wrap::-webkit-scrollbar-corner, .active-filters::-webkit-scrollbar-corner, .filter-sidebar form::-webkit-scrollbar-corner, .drawer::-webkit-scrollbar-corner {
+    .matrix::-webkit-scrollbar-corner, .table-wrap::-webkit-scrollbar-corner, .style-list::-webkit-scrollbar-corner, .active-filters::-webkit-scrollbar-corner, .filter-sidebar form::-webkit-scrollbar-corner, .drawer::-webkit-scrollbar-corner {
       background: transparent;
     }
     .table-wrap {
@@ -903,7 +938,13 @@
       .hero-copy { display: none; }
       h1 { font-size: 30px; }
       .insight-grid { grid-template-columns: 1fr; }
+      .order-structure-grid { grid-template-columns: 1fr; }
+      .bucket-list { grid-template-columns: 1fr; }
+      .bucket-row:nth-last-child(-n+2) { border-bottom: 1px solid var(--module-border-soft); }
+      .bucket-row:last-child { border-bottom: 0; }
       .style-row { grid-template-columns: 1fr; align-items: start; }
+      .style-panel { height: auto; display: block; }
+      .style-list { overflow: visible; padding-right: 0; }
       .issue-toolbar { grid-template-columns: 1fr; }
       .issue-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
       .issue-metric { padding: 10px 8px; }
@@ -986,6 +1027,7 @@
         </div>
       </div>
       <div class="platform-actions">
+        <button class="ghost-button" type="button" id="resetFiltersTop">重置筛选</button>
         <a class="platform-link" href="../../index.html">返回主页</a>
       </div>
     </header>
@@ -1119,7 +1161,7 @@
           </section>
         </div>
         <div class="insight-column">
-          <section class="panel">
+          <section class="panel style-panel">
             <div class="panel-head">
               <div><span class="panel-label">Style</span><h2>款号集中度</h2></div>
             </div>

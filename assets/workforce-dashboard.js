@@ -434,7 +434,7 @@
           '<section class="dashboard-column center-column">' +
             '<section class="dashboard-section overview-section"><div class="section-label"><span>核心总览</span><em>OVERVIEW</em></div><div class="metric-grid" id="metric-grid"></div></section>' +
             TechPanel("异常提醒", "ALERT", '<div class="panel-head"><span id="status-pill" class="status-pill">加载中</span></div><div id="notes"></div>', "alert-panel tone-amber") +
-            TechPanel("员工人效总览", "COMMAND CENTER", '<div class="command-center"><div id="completion-ring" class="focus-orbit"></div><div id="summary-grid" class="summary-grid"></div></div>', "command-center-panel tone-cyan") +
+            TechPanel("员工效率总览", "COMMAND CENTER", '<div class="command-center"><div id="completion-ring" class="focus-orbit"></div><div id="summary-grid" class="summary-grid"></div></div>', "command-center-panel tone-cyan") +
           '</section>' +
           '<aside class="dashboard-column right-column">' +
             TechPanel("考勤覆盖", "ATTENDANCE", '<div id="attendance-panel"></div>', "support-panel tone-green") +
@@ -628,7 +628,7 @@
 
     const tiles = [
       ["今日总工作量", formatNumber(stats.totalPieces), "各岗位有效动作"],
-      ["平均人效", stats.averageEfficiency === null ? "-" : stats.averageEfficiency.toLocaleString("zh-CN", { maximumFractionDigits: 2 }), "件/小时"],
+      ["平均效率", stats.averageEfficiency === null ? "-" : stats.averageEfficiency.toLocaleString("zh-CN", { maximumFractionDigits: 2 }), "件/小时"],
       ["纳入统计人数", formatNumber(stats.included), "有效员工"],
       ["人工复核项", formatNumber(stats.reviewCount), "需处理"]
     ];

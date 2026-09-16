@@ -5,765 +5,339 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>仓储运营管理平台 - 排班管理</title>
   <style>
-    :root {
-      --bg: #090d10;
-      --panel: rgba(16, 22, 25, 0.86);
-      --panel-strong: rgba(23, 31, 35, 0.94);
-      --ink: #edf5f1;
-      --muted: #91a09b;
-      --line: rgba(210, 235, 225, 0.13);
-      --accent: #6ee7d2;
-      --accent-strong: #c9fff4;
-      --accent-soft: rgba(110, 231, 210, 0.11);
-      --amber: #f8d17f;
-      --amber-soft: rgba(248, 209, 127, 0.12);
-      --red: #ff9f95;
-      --red-soft: rgba(255, 159, 149, 0.12);
-      --green: #86efac;
-      --green-soft: rgba(134, 239, 172, 0.11);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--ink);
-      font: 15px/1.6 "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    :root { --bg:#0a0e10; --panel:#11191d; --panel-2:#172126; --ink:#eef7f4; --muted:#94a7a2; --line:rgba(220,240,235,.14); --accent:#5fe0c7; --gold:#f2c35f; --red:#ff9387; --green:#86e6a0; --shadow:0 22px 70px rgba(0,0,0,.30); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; color:var(--ink); font:15px/1.55 "Microsoft YaHei","PingFang SC",Arial,sans-serif; background:linear-gradient(180deg,#081113,#111517 48%,#080b0c); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1680px,100%); margin:0 auto; padding:22px 22px 52px; }
+    .platform-header,.hero,.panel,.metric,.day-card,.shift-card,.warning-card,.trend-row,.calendar-sidebar-toggle { border:1px solid var(--line); background:rgba(17,25,29,.88); box-shadow:var(--shadow); }
+    .platform-header { min-height:70px; margin-bottom:18px; padding:12px 16px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+    .platform-identity { display:flex; align-items:center; gap:13px; min-width:0; }
+    .platform-mark { width:40px; height:40px; border-radius:8px; object-fit:contain; background:#fff; }
+    .platform-title { display:grid; gap:4px; min-width:0; }
+    .platform-title strong { font-size:16px; }
+    .platform-breadcrumb { color:var(--muted); font-size:13px; display:flex; gap:8px; white-space:nowrap; }
+    .platform-actions,.toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .platform-link,.primary-button,.ghost-button,.mini-button,select,input { min-height:38px; border:1px solid rgba(255,255,255,.13); border-radius:8px; padding:8px 12px; font:inherit; font-weight:800; }
+    .platform-link,.primary-button { color:#061210; background:linear-gradient(135deg,var(--accent),#fff0bd); box-shadow:0 14px 34px rgba(95,224,199,.14); }
+    .ghost-button,.mini-button,input { color:var(--ink); background:rgba(255,255,255,.045); }
+    .mini-button { min-height:30px; padding:5px 9px; font-size:12px; }
+    .primary-button,.ghost-button,.mini-button { cursor:pointer; }
+    .mini-button:disabled { cursor:not-allowed; opacity:.42; }
+    select { color:var(--ink); background:#121c20; color-scheme:dark; }
+    select option { color:#eef7f4; background:#121c20; }
+    select option:checked { color:#061210; background:var(--accent); }
+    .hero { margin-bottom:18px; padding:16px; border-radius:8px; display:grid; grid-template-columns:minmax(210px,.85fr) minmax(0,4fr); gap:12px; align-items:stretch; background:linear-gradient(135deg,rgba(95,224,199,.12),rgba(242,195,95,.08)),var(--panel); }
+    .hero-head { min-width:0; display:flex; justify-content:stretch; align-items:stretch; gap:0; margin:0; }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:clamp(34px,5vw,58px); line-height:1; letter-spacing:0; }
+    h2 { font-size:21px; line-height:1.25; }
+    h3 { font-size:16px; }
+    .eyebrow,.panel-label { color:#c9fff4; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0; }
+    .hero-copy,.panel-note,.muted { color:var(--muted); }
+    .status-pill,.tag { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; padding:6px 10px; font-size:12px; font-weight:900; white-space:nowrap; }
+    .status-pill { width:100%; min-height:86px; border-radius:8px; justify-content:flex-start; align-items:stretch; color:#08201b; background:linear-gradient(135deg,var(--accent),#fff0bd); box-shadow:inset 0 1px 0 rgba(255,255,255,.36),inset 0 -10px 18px rgba(0,0,0,.12); white-space:normal; text-align:left; }
+    .status-card { width:100%; min-width:0; display:grid; align-content:space-between; gap:8px; }
+    .status-card span { color:rgba(8,32,27,.72); font-size:11px; font-weight:950; }
+    .status-card strong { color:#061210; font-size:24px; line-height:1; }
+    .status-card small { color:rgba(8,32,27,.78); font-size:11px; font-weight:900; line-height:1.25; white-space:normal; }
+    .tag { border:1px solid rgba(255,255,255,.13); color:#cfe4df; background:rgba(255,255,255,.04); }
+    .tag.warn { color:#2b1c00; background:var(--gold); }
+    .tag.good { color:#062313; background:var(--green); }
+    .tag.red { color:#2d0805; background:var(--red); }
+    .metric-grid { display:grid; grid-template-columns:repeat(6,minmax(110px,1fr)); gap:10px; }
+    .metric { min-height:86px; padding:12px 14px; border-radius:8px; display:grid; align-content:space-between; background:var(--panel-2); }
+    .metric span,.metric small { color:var(--muted); }
+    .metric strong { font-size:30px; line-height:1; }
+    .metric:nth-child(-n+5) strong::after { content:" 人次"; color:var(--muted); font-size:13px; font-weight:950; }
+    .toolbar { margin-bottom:16px; justify-content:space-between; align-items:start; }
+    .filters { flex:1 1 760px; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:8px; display:grid; gap:8px; background:rgba(17,25,29,.88); box-shadow:var(--shadow); }
+    .filter-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px 10px; align-items:end; }
+    .field { min-width:0; display:grid; gap:4px; }
+    .field label { color:var(--muted); font-size:11px; font-weight:900; white-space:nowrap; }
+    .field input,.field select {
+      width:100%;
+      min-width:0;
+      height:40px;
+      color:rgba(248,252,250,.94);
+      border:1px solid rgba(150,160,160,.28);
+      border-radius:8px;
       background:
-        linear-gradient(rgba(169, 222, 211, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(169, 222, 211, 0.035) 1px, transparent 1px),
-        radial-gradient(circle at 8% 0%, rgba(110, 231, 210, 0.14), transparent 25%),
-        radial-gradient(circle at 100% 8%, rgba(248, 209, 127, 0.10), transparent 24%),
-        linear-gradient(180deg, #081113 0%, #0b1114 48%, #070b0d 100%);
-      background-size: 24px 24px, 24px 24px, auto, auto, auto;
-    }
-
-    a { color: inherit; }
-
-    .page {
-      width: min(1720px, 100%);
-      margin: 0 auto;
-      padding: 24px 24px 56px;
-    }
-
-    .platform-header,
-    .hero,
-    .panel,
-    .metric,
-    .coverage-card,
-    .shift-card,
-    .warning-card {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .platform-header {
-      min-height: 72px;
-      margin-bottom: 18px;
-      padding: 12px 16px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      background: linear-gradient(180deg, rgba(15, 25, 27, 0.94), rgba(9, 17, 19, 0.88));
-    }
-
-    .platform-identity {
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .platform-mark {
-      width: 40px;
-      height: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.72);
-      border-radius: 8px;
-      display: block;
-      object-fit: contain;
-      flex: 0 0 auto;
-      background: #fff;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.86), 0 12px 34px rgba(0,0,0,.22);
-    }
-
-    .platform-title {
-      min-width: 0;
-      display: grid;
-      gap: 5px;
-    }
-
-    .platform-title strong {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-
-    .platform-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .platform-breadcrumb span:last-child {
-      overflow: hidden;
-      color: var(--accent-strong);
-      text-overflow: ellipsis;
-    }
-
-    .platform-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 0 0 auto;
-    }
-
-    .module-state,
-    .status-pill,
-    .tag,
-    .tab {
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      font-weight: 800;
-    }
-
-    .module-state {
-      min-height: 36px;
-      padding: 8px 12px;
-      border: 1px solid rgba(110, 231, 210, 0.18);
-      color: var(--accent-strong);
-      background: var(--accent-soft);
-      font-size: 13px;
-    }
-
-    .platform-link,
-    .ghost-button {
-      min-height: 38px;
-      padding: 9px 13px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font: inherit;
-      font-weight: 800;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .platform-link {
-      color: #061311;
-      background: linear-gradient(135deg, var(--accent), #fff1cb);
-      border-color: rgba(255, 241, 203, 0.18);
-      box-shadow: 0 14px 34px rgba(110, 231, 210, 0.14);
-    }
-
-    .ghost-button {
-      color: var(--accent-strong);
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .hero {
-      margin-bottom: 18px;
-      padding: 30px;
-      border-radius: 24px;
-      overflow: hidden;
-    }
-
-    .hero-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 18px;
-      align-items: start;
-      margin-bottom: 24px;
-    }
-
-    .eyebrow,
-    .panel-label {
-      margin-bottom: 9px;
-      display: inline-flex;
-      color: var(--accent-strong);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    h1, h2, h3, p { margin: 0; }
-
-    h1 {
-      max-width: 900px;
-      font-size: clamp(34px, 5vw, 66px);
-      line-height: 0.98;
-      letter-spacing: 0;
-    }
-
-    h2 {
-      font-size: 22px;
-      line-height: 1.24;
-    }
-
-    h3 {
-      font-size: 17px;
-      line-height: 1.28;
-    }
-
-    .hero-copy,
-    .panel-note,
-    .muted {
-      color: var(--muted);
-      line-height: 1.72;
-    }
-
-    .hero-copy {
-      max-width: 820px;
-      margin-top: 14px;
-    }
-
-    .status-pill {
-      min-height: 34px;
-      padding: 7px 12px;
-      border: 1px solid rgba(248, 209, 127, 0.26);
-      color: var(--amber);
-      background: var(--amber-soft);
-      font-size: 13px;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .metric {
-      min-height: 116px;
-      padding: 17px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 13px;
-      font-size: 30px;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .metric small {
-      display: block;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    main {
-      display: grid;
-      gap: 18px;
-    }
-
-    .toolbar {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tab {
-      min-height: 34px;
-      padding: 7px 12px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.032);
-      cursor: pointer;
-    }
-
-    .tab.active {
-      color: #061311;
-      border-color: rgba(110, 231, 210, 0.62);
-      background: linear-gradient(135deg, var(--accent), #e9fff8);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 22px;
-      border-radius: var(--radius);
-    }
-
-    .panel-head {
-      margin-bottom: 16px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .panel-title {
-      display: grid;
-      gap: 5px;
-    }
-
-    .coverage-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .coverage-card {
-      padding: 16px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .coverage-card header {
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .coverage-card strong {
-      font-size: 18px;
-    }
-
-    .tag {
-      min-height: 26px;
-      padding: 4px 9px;
-      border: 1px solid rgba(134, 239, 172, 0.24);
-      color: var(--green);
-      background: var(--green-soft);
-      font-size: 12px;
-    }
-
-    .tag.warn {
-      border-color: rgba(248, 209, 127, 0.28);
-      color: var(--amber);
-      background: var(--amber-soft);
-    }
-
-    .tag.danger {
-      border-color: rgba(255, 159, 149, 0.28);
-      color: var(--red);
-      background: var(--red-soft);
-    }
-
-    .coverage-numbers {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .coverage-numbers span {
-      padding: 9px;
-      border-radius: 12px;
-      display: grid;
-      gap: 4px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 12px;
-    }
-
-    .coverage-numbers b {
-      color: var(--ink);
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    .shift-list,
-    .warning-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .shift-card,
-    .warning-card {
-      padding: 15px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .shift-card {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .time-block {
-      width: 72px;
-      min-height: 58px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: #061311;
-      background: linear-gradient(135deg, var(--accent), #fff1cb);
-      font-weight: 900;
-      line-height: 1.15;
-      text-align: center;
-    }
-
-    .shift-main {
-      min-width: 0;
-      display: grid;
-      gap: 4px;
-    }
-
-    .shift-meta {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .table-wrap {
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-    }
-
-    table {
-      width: 100%;
-      min-width: 860px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      text-align: left;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    th {
-      color: var(--accent-strong);
-      background: rgba(255, 255, 255, 0.035);
-      font-weight: 800;
-    }
-
-    td strong {
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .warning-card {
-      display: grid;
-      gap: 5px;
-      border-color: rgba(248, 209, 127, 0.18);
-    }
-
-    .warning-card strong {
-      color: var(--amber);
-    }
-
-    .week-strip {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .day-card {
-      min-height: 96px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      display: grid;
-      align-content: space-between;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .day-card.active {
-      border-color: rgba(110, 231, 210, 0.58);
-      background: rgba(110, 231, 210, 0.10);
-    }
-
-    .day-card span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .day-card strong {
-      font-size: 16px;
-    }
-
-    @media (max-width: 1240px) {
-      .metric-grid,
-      .coverage-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .page {
-        padding: 16px;
-      }
-
-      .platform-header,
-      .platform-actions,
-      .hero-head,
-      .toolbar {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .platform-header,
-      .toolbar {
-        display: flex;
-      }
-
-      .hero-head {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .platform-link,
-      .ghost-button {
-        width: 100%;
-      }
-
-      .hero,
-      .panel {
-        padding: 20px;
-      }
-
-      .metric-grid,
-      .coverage-grid,
-      .week-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .shift-card {
-        grid-template-columns: 1fr;
-      }
-
-      .time-block {
-        width: 100%;
-      }
-    }
+        radial-gradient(ellipse at 16% 18%,rgba(255,255,255,.14) 0%,rgba(255,255,255,.045) 24%,transparent 48%),
+        radial-gradient(ellipse at 82% 78%,rgba(190,232,225,.075) 0%,rgba(190,232,225,.03) 28%,transparent 56%),
+        linear-gradient(115deg,transparent 0%,rgba(255,255,255,.12) 20%,rgba(255,255,255,.035) 34%,transparent 52%),
+        linear-gradient(90deg,transparent 0%,rgba(210,218,216,.035) 24%,rgba(238,244,242,.10) 50%,rgba(210,218,216,.035) 76%,transparent 100%),
+        linear-gradient(180deg,rgba(255,255,255,.28) 0 1px,rgba(255,255,255,.06) 2px,transparent 4px),
+        linear-gradient(0deg,rgba(210,220,218,.10) 0 1px,rgba(255,255,255,.04) 2px,transparent 5px),
+        linear-gradient(180deg,rgba(31,37,38,.92) 0%,rgba(103,113,113,.64) 18%,rgba(56,63,64,.82) 34%,rgba(22,28,29,.91) 58%,rgba(5,9,10,.96) 100%);
+      outline:none;
+      text-shadow:0 -1px 0 rgba(0,0,0,.70);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 0 2px 8px rgba(255,255,255,.055),
+        inset 1px 0 5px rgba(255,255,255,.055),
+        inset -1px 0 5px rgba(0,0,0,.48),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.075),
+        inset 0 0 14px rgba(190,232,225,.045),
+        0 2px 5px rgba(0,0,0,.28),
+        0 0 0 1px rgba(255,255,255,.035);
+      transition:border-color .18s ease,box-shadow .18s ease,filter .18s ease;
+    }
+    .field select {
+      appearance:none;
+      -webkit-appearance:none;
+      padding-right:34px;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpolygon points='7,3.6 11.2,7.8 2.8,7.8' fill='%23dce4e2'/%3E%3Cpolygon points='2.8,10.2 11.2,10.2 7,14.4' fill='%23dce4e2'/%3E%3C/svg%3E") calc(100% - 12px) 50% / 14px 18px no-repeat,
+        radial-gradient(ellipse at 16% 18%,rgba(255,255,255,.14) 0%,rgba(255,255,255,.045) 24%,transparent 48%),
+        radial-gradient(ellipse at 82% 78%,rgba(190,232,225,.075) 0%,rgba(190,232,225,.03) 28%,transparent 56%),
+        linear-gradient(115deg,transparent 0%,rgba(255,255,255,.12) 20%,rgba(255,255,255,.035) 34%,transparent 52%),
+        linear-gradient(90deg,transparent 0%,rgba(210,218,216,.035) 24%,rgba(238,244,242,.10) 50%,rgba(210,218,216,.035) 76%,transparent 100%),
+        linear-gradient(180deg,rgba(255,255,255,.28) 0 1px,rgba(255,255,255,.06) 2px,transparent 4px),
+        linear-gradient(0deg,rgba(210,220,218,.10) 0 1px,rgba(255,255,255,.04) 2px,transparent 5px),
+        linear-gradient(180deg,rgba(31,37,38,.92) 0%,rgba(103,113,113,.64) 18%,rgba(56,63,64,.82) 34%,rgba(22,28,29,.91) 58%,rgba(5,9,10,.96) 100%);
+    }
+    .field input:hover,.field select:hover,.field input:focus,.field select:focus {
+      border-color:rgba(190,232,225,.48);
+      filter:brightness(1.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.30),
+        inset 1px 0 4px rgba(255,255,255,.06),
+        inset -1px 0 5px rgba(0,0,0,.48),
+        inset 0 -8px 12px rgba(0,0,0,.64),
+        inset 0 8px 14px rgba(255,255,255,.06),
+        inset 0 0 16px rgba(190,232,225,.055),
+        0 0 0 2px rgba(190,232,225,.16),
+        0 2px 6px rgba(0,0,0,.32);
+    }
+    .field.search { grid-column:span 2; }
+    .date-control { display:grid; grid-template-columns:minmax(0,1fr) 42px; gap:6px; }
+    .date-control input[type="date"] { color-scheme:dark; }
+    .date-picker-button { width:42px; height:40px; padding:0; border:0; border-radius:8px; display:grid; place-items:center; color:#c9fff4; background:linear-gradient(180deg,rgba(95,224,199,.32),rgba(95,224,199,.12)); box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -6px 10px rgba(0,0,0,.34),0 2px 5px rgba(0,0,0,.28); cursor:pointer; }
+    .date-picker-button:hover,.date-picker-button:focus { background:linear-gradient(180deg,rgba(95,224,199,.44),rgba(95,224,199,.18)); box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -6px 10px rgba(0,0,0,.34),0 0 0 2px rgba(190,232,225,.16),0 2px 6px rgba(0,0,0,.32); outline:none; }
+    .date-picker-button svg { width:20px; height:20px; stroke:currentColor; }
+    .filter-reset { display:flex; align-items:end; justify-content:flex-end; }
+    #clear-filters { width:100%; min-height:40px; white-space:nowrap; }
+    .panel { padding:18px; border-radius:8px; margin-bottom:16px; }
+    .panel-head { display:flex; justify-content:space-between; gap:14px; align-items:start; margin-bottom:14px; }
+    .panel-title { display:grid; gap:5px; min-width:0; }
+    .warning-title-line { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .warning-title-line .panel-note { font-size:13px; }
+    .calendar-sidebar { position:fixed; top:50%; left:18px; z-index:60; width:330px; transform:translate(-100%,-50%); transition:transform 180ms ease; }
+    .calendar-sidebar.is-open,.calendar-sidebar:hover { transform:translate(0,-50%); }
+    .calendar-sidebar-toggle { position:absolute; top:18px; right:-52px; width:44px; height:40px; border-radius:8px; color:var(--accent); background:rgba(15,20,22,.94); cursor:pointer; display:grid; place-items:center; font:inherit; font-size:13px; font-weight:900; }
+    .calendar-sidebar-toggle:hover { border-color:rgba(95,224,199,.55); background:rgba(23,32,34,.98); }
+    .calendar-sidebar .panel { margin:0; padding:14px; overflow:visible; }
+    .calendar-sidebar .panel-head { margin-bottom:10px; }
+    .calendar-sidebar .panel-note { font-size:12px; }
+    .calendar-shell { display:grid; gap:10px; }
+    .calendar-monthbar { display:flex; justify-content:space-between; gap:10px; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    .calendar-nav { display:flex; align-items:center; gap:6px; min-width:0; }
+    .calendar-nav-button { width:28px; height:28px; border:1px solid rgba(210,235,225,.14); border-radius:8px; display:grid; place-items:center; color:var(--ink); background:rgba(255,255,255,.045); cursor:pointer; font:inherit; font-size:16px; font-weight:950; }
+    .calendar-nav-button:hover,.calendar-nav-button:focus { border-color:rgba(95,224,199,.42); background:rgba(95,224,199,.12); outline:none; }
+    .calendar-nav-button:disabled { cursor:not-allowed; opacity:.35; }
+    .calendar-title { color:var(--ink); font-size:17px; font-weight:900; }
+    .calendar-summary { color:var(--muted); font-size:12px; white-space:nowrap; }
+    .calendar-weekdays,.calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+    .calendar-weekdays span { text-align:center; color:var(--muted); font-size:11px; font-weight:900; }
+    .calendar-grid { overflow:visible; padding-right:0; }
+    .calendar-blank,.calendar-day { aspect-ratio:1; min-width:0; border-radius:8px; }
+    .calendar-blank { border:1px solid transparent; }
+    .calendar-day { position:relative; border:1px solid rgba(210,235,225,.10); color:var(--ink); background:rgba(255,255,255,.035); cursor:pointer; display:grid; place-items:center; padding:4px; text-align:center; font:inherit; }
+    .calendar-day:hover { border-color:rgba(95,224,199,.38); background:rgba(95,224,199,.10); }
+    .calendar-day.active { color:#061210; border-color:rgba(255,241,203,.48); background:linear-gradient(135deg,var(--accent),#fff0bd); box-shadow:0 10px 28px rgba(95,224,199,.16); }
+    .calendar-day-num { font-size:18px; font-weight:950; line-height:1; }
+    .calendar-day.active .calendar-day-num { color:#061210; }
+    .calendar-warn { position:absolute; right:3px; bottom:3px; min-width:14px; height:14px; padding:0 3px; border-radius:999px; display:grid; place-items:center; color:#2b1c00; background:var(--gold); font-size:9px; font-weight:950; line-height:1; }
+    .calendar-detail { display:grid; gap:6px; min-height:48px; padding-top:8px; border-top:1px solid var(--line); }
+    .calendar-meta { color:var(--muted); font-size:12px; white-space:nowrap; }
+    .calendar-badge { color:#061210; background:var(--accent); border-radius:8px; padding:5px 8px; font-size:11px; font-weight:900; line-height:1.5; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(360px,.75fr); gap:16px; align-items:stretch; margin-bottom:16px; }
+    .layout > .panel { height:100%; margin-bottom:0; }
+    .shift-list,.warning-list,.trend-list { display:grid; gap:10px; }
+    .shift-list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .warning-panel { background:linear-gradient(135deg,rgba(255,147,135,.075),rgba(242,195,95,.045)),rgba(17,25,29,.88); }
+    .warning-list { max-height:360px; overflow:auto; padding-right:4px; }
+    .warning-count { color:var(--muted); font-size:12px; font-weight:800; white-space:nowrap; }
+    .shift-card,.warning-card { padding:13px; border-radius:8px; display:grid; gap:8px; background:rgba(255,255,255,.035); }
+    .warning-card { position:relative; overflow:hidden; border-left:4px solid rgba(242,195,95,.78); }
+    .warning-card::before { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(242,195,95,.12),transparent 52%); }
+    .warning-card strong,.warning-card span { position:relative; }
+    .warning-card.missing { border-left-color:rgba(255,147,135,.90); }
+    .warning-card.missing::before { background:linear-gradient(90deg,rgba(255,147,135,.14),transparent 52%); }
+    .warning-card.status { border-left-color:rgba(156,199,255,.90); }
+    .warning-card.status::before { background:linear-gradient(90deg,rgba(156,199,255,.14),transparent 52%); }
+    .warning-type { width:max-content; min-height:22px; padding:2px 8px; border-radius:999px; color:#2b1c00; background:var(--gold); font-size:11px; font-weight:950; }
+    .warning-card.missing .warning-type { color:#2d0805; background:var(--red); }
+    .warning-card.status .warning-type { color:#071425; background:var(--blue); }
+    .shift-card { min-height:128px; grid-template-rows:auto auto 1fr; align-content:start; align-items:stretch; gap:10px; }
+    .shift-card-head,.shift-card-foot { min-width:0; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .shift-name { color:var(--ink); font-size:15px; font-weight:950; line-height:1.2; }
+    .shift-card-foot { align-self:end; }
+    .shift-note { color:var(--muted); font-size:12px; font-weight:800; }
+    .shift-card .tag { flex:0 0 auto; min-height:24px; }
+    .time-block { width:100%; min-height:48px; color:#061210; background:linear-gradient(135deg,var(--accent),#fff0bd); border-radius:8px; padding:9px 12px; display:flex; align-items:flex-end; gap:8px; font-size:28px; line-height:1; font-weight:950; text-align:left; }
+    .time-block::after { content:"人次"; padding-bottom:3px; color:rgba(8,32,27,.72); font-size:13px; font-weight:950; line-height:1; }
+    .trend-row { border-radius:8px; padding:12px; display:grid; grid-template-columns:72px minmax(140px,1fr) repeat(4,minmax(82px,auto)); gap:12px; align-items:center; background:rgba(255,255,255,.035); }
+    .trend-bar { height:10px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; }
+    .trend-bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--gold)); }
+    .trend-cell { color:var(--muted); font-size:13px; }
+    .trend-cell b { display:block; color:var(--ink); font-size:16px; }
+    .trend-overview { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr); gap:12px; align-items:stretch; }
+    .trend-chart { padding:12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); overflow:hidden; }
+    .trend-chart svg { width:100%; height:auto; display:block; }
+    .trend-axis,.trend-grid-line { stroke:rgba(220,240,235,.16); stroke-width:1; }
+    .trend-bar-rect { fill:url(#attendanceFill); }
+    .trend-line { fill:none; stroke:var(--gold); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+    .trend-point { fill:var(--gold); stroke:#1a1304; stroke-width:2; }
+    .trend-warning-line { fill:none; stroke:var(--red); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:5 6; }
+    .trend-warning-point { fill:var(--red); stroke:#240807; stroke-width:2; }
+    .trend-label { fill:var(--muted); font-size:12px; font-weight:800; }
+    .trend-value { fill:var(--ink); font-size:13px; font-weight:900; }
+    .trend-bar-value { fill:#061210; font-size:12px; font-weight:950; }
+    .trend-line-box { fill:rgba(8,13,14,.86); stroke:rgba(242,195,95,.34); stroke-width:1; }
+    .trend-line-value { fill:var(--ink); font-size:12px; font-weight:950; }
+    .trend-warning-box { fill:rgba(42,9,8,.86); stroke:rgba(255,147,135,.52); stroke-width:1; }
+    .trend-warning-value { fill:#ffd6d2; font-size:11px; font-weight:950; }
+    .trend-anim-label { opacity:0; animation:trend-label-enter .24s ease-out forwards; }
+    @keyframes trend-label-enter { from { opacity:0; } to { opacity:1; } }
+    .trend-month-hit { fill:rgba(255,255,255,0); cursor:pointer; pointer-events:all; transition:fill .18s ease; }
+    .trend-month-hit:hover,.trend-month-hit:focus { fill:rgba(95,224,199,.09); outline:none; }
+    .trend-legend { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+    .trend-legend span { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:12px; font-weight:800; }
+    .trend-legend i { width:18px; height:8px; border-radius:999px; display:inline-block; background:var(--accent); }
+    .trend-legend i.people { height:3px; background:var(--gold); }
+    .trend-legend i.warning { width:9px; height:9px; background:var(--red); }
+    .daily-month-panel { min-width:0; padding:12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); display:grid; grid-template-rows:auto minmax(0,1fr); gap:10px; }
+    .daily-month-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .daily-month-head strong { color:var(--ink); font-size:15px; }
+    .daily-month-head span { color:var(--muted); font-size:12px; font-weight:800; white-space:nowrap; }
+    .daily-table-wrap { min-height:0; max-height:282px; overflow:auto; border:1px solid rgba(210,235,225,.10); border-radius:8px; isolation:isolate; background:rgba(8,18,20,.78); scrollbar-width:auto; scrollbar-color:rgba(95,224,199,.78) rgba(7,17,19,.84); }
+    .daily-table-wrap::-webkit-scrollbar { width:12px; height:16px; }
+    .daily-table-wrap::-webkit-scrollbar-track { background:rgba(7,17,19,.84); border-radius:999px; box-shadow:inset 0 0 0 1px rgba(210,235,225,.08); }
+    .daily-table-wrap::-webkit-scrollbar-thumb { min-width:42px; min-height:42px; background:linear-gradient(135deg,rgba(95,224,199,.95),rgba(255,240,189,.82)); border:3px solid rgba(7,17,19,.88); border-radius:999px; }
+    .daily-table-wrap::-webkit-scrollbar-thumb:hover { background:linear-gradient(135deg,#7df4df,#fff0bd); }
+    .daily-table-wrap::-webkit-scrollbar-corner { background:rgba(7,17,19,.84); }
+    .daily-month-table { width:100%; min-width:540px; border-collapse:separate; border-spacing:0; }
+    .daily-month-table th,.daily-month-table td { padding:8px 9px; border-bottom:1px solid rgba(220,240,235,.10); white-space:nowrap; font-size:12px; }
+    .daily-month-table th { color:#c9fff4; background:#17282c; position:sticky; top:0; z-index:3; box-shadow:0 1px 0 rgba(210,235,225,.18), 0 8px 14px rgba(0,0,0,.22); }
+    .daily-month-table td { color:var(--ink); }
+    .daily-month-table .muted-cell { color:var(--muted); }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:8px; }
+    .detail-tools { display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .detail-count { color:var(--muted); font-size:12px; font-weight:800; white-space:nowrap; }
+    .detail-size { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; font-weight:900; white-space:nowrap; }
+    .detail-size select { min-height:34px; padding:6px 30px 6px 10px; }
+    .pager { margin-top:12px; padding-top:12px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; color:var(--muted); font-size:13px; font-weight:800; flex-wrap:wrap; }
+    .pager-actions { display:flex; align-items:center; gap:8px; }
+    table { width:100%; min-width:980px; border-collapse:collapse; }
+    th,td { padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+    th { color:#c9fff4; background:rgba(255,255,255,.045); position:sticky; top:0; }
+    tbody tr:hover { background:rgba(255,255,255,.04); }
+    @media (prefers-reduced-motion:reduce){ .trend-anim-label { opacity:1; animation:none; } }
+    @media (max-width:1100px){ .hero{grid-template-columns:1fr} .status-pill{min-height:auto} .metric-grid{grid-template-columns:repeat(3,1fr)} .layout,.trend-overview{grid-template-columns:1fr} .shift-list{grid-template-columns:repeat(2,minmax(0,1fr))} .trend-row{grid-template-columns:72px 1fr 1fr 1fr} }
+    @media (max-width:680px){ .page{padding:14px} .hero,.panel{padding:16px} .metric-grid,.trend-row,.filter-grid,.shift-list{grid-template-columns:1fr} .field.search{grid-column:auto} .platform-header{align-items:flex-start;flex-direction:column} .calendar-sidebar{top:auto;bottom:0;left:12px;right:12px;width:auto;transform:translateY(calc(100% - 52px))} .calendar-sidebar.is-open,.calendar-sidebar:hover{transform:translateY(0)} .calendar-sidebar-toggle{top:-48px;right:8px;width:58px} .calendar-sidebar .panel{max-height:68vh;overflow:auto} }
   </style>
 </head>
 <body>
   <div class="page">
+    <aside class="calendar-sidebar" id="calendarSidebar">
+      <button id="calendarPanelToggle" class="calendar-sidebar-toggle" type="button" aria-label="打开日期浮板" aria-expanded="false">日期</button>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><span class="panel-label">Calendar</span><h2>月度出勤日历</h2><p class="panel-note">点击日期查看当日人员状态。</p></div>
+        </div>
+        <div class="calendar-shell">
+          <div class="calendar-monthbar">
+            <div class="calendar-nav">
+              <button class="calendar-nav-button" id="calendar-prev-month" type="button" aria-label="上一月">&lt;</button>
+              <strong class="calendar-title" id="calendar-title">-</strong>
+              <button class="calendar-nav-button" id="calendar-next-month" type="button" aria-label="下一月">&gt;</button>
+            </div>
+            <span class="calendar-summary" id="calendar-summary">-</span>
+          </div>
+          <div class="calendar-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+          <div class="calendar-grid" id="day-strip"></div>
+          <div class="calendar-detail" id="calendar-detail"></div>
+        </div>
+      </section>
+    </aside>
     <header class="platform-header">
       <div class="platform-identity">
         <img class="platform-mark" src="../../assets/jingtang-warehouse-logo-clear.png" alt="井唐仓储" />
         <div class="platform-title">
           <strong>仓储运营管理平台</strong>
-          <div class="platform-breadcrumb">
-            <span>运营驾驶舱</span>
-            <span>/</span>
-            <span>排班管理</span>
-          </div>
+          <div class="platform-breadcrumb"><span>运营驾驶舱</span><span>/</span><span>排班管理</span></div>
         </div>
       </div>
       <div class="platform-actions">
-        <span class="module-state">页面框架已就绪</span>
+        <span class="tag good">已接入月度考勤字段</span>
         <a class="platform-link" href="../../index.html">返回主页</a>
       </div>
     </header>
-
     <section class="hero">
       <div class="hero-head">
-        <div>
-          <span class="eyebrow">Scheduling</span>
-          <h1>排班管理</h1>
-          <p class="hero-copy">围绕班次、岗位覆盖、人员出勤和异常缺口组织排班信息。当前仅保留页面框架和字段结构，等待接入真实排班 Excel 或接口数据。</p>
-        </div>
-        <span class="status-pill">待接入真实排班源</span>
+        <span class="status-pill" id="month-status">-</span>
       </div>
-
-      <div class="metric-grid">
-        <article class="metric"><span>今日排班人数</span><strong id="metric-planned">-</strong><small>待排班源同步</small></article>
-        <article class="metric"><span>预计在岗人数</span><strong id="metric-present">-</strong><small>待排班源同步</small></article>
-        <article class="metric"><span>请假 / 缺勤</span><strong id="metric-leave">-</strong><small>待排班源同步</small></article>
-        <article class="metric"><span>临时工人数</span><strong id="metric-temp">-</strong><small>待排班源同步</small></article>
-        <article class="metric"><span>岗位缺口</span><strong id="metric-gap">-</strong><small>待排班源同步</small></article>
-        <article class="metric"><span>延长班人数</span><strong id="metric-overtime">-</strong><small>待排班源同步</small></article>
-      </div>
+      <div class="metric-grid" id="metric-grid"></div>
     </section>
-
     <main>
-      <section class="toolbar">
-        <div class="tabs" aria-label="日期切换">
-          <button class="tab active" type="button">今日</button>
-          <button class="tab" type="button">本周</button>
-          <button class="tab" type="button">下周</button>
-        </div>
-        <a class="ghost-button" href="#details">查看人员明细</a>
-      </section>
-
       <section class="panel">
         <div class="panel-head">
-          <div class="panel-title">
-            <span class="panel-label">Week</span>
-            <h2>本周排班日历</h2>
-            <p class="panel-note">接入真实排班源后，按日查看班次数、已排人数和异常提醒。</p>
+          <div class="panel-title"><span class="panel-label">Trend</span><h2>历史月度趋势</h2></div>
+        </div>
+        <div class="trend-list" id="trend-list"></div>
+      </section>
+      <section class="toolbar">
+        <div class="filters">
+          <div class="filter-grid">
+            <div class="field"><label for="month-select">月份</label><select id="month-select"></select></div>
+            <div class="field date"><label for="start-date-filter">起始日期</label><div class="date-control"><input id="start-date-filter" type="date" /><button class="date-picker-button" type="button" data-date-target="start-date-filter" aria-label="打开起始日期选择器"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></button></div></div>
+            <div class="field date"><label for="end-date-filter">结束日期</label><div class="date-control"><input id="end-date-filter" type="date" /><button class="date-picker-button" type="button" data-date-target="end-date-filter" aria-label="打开结束日期选择器"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></button></div></div>
+            <div class="field search"><label for="name-filter">姓名</label><input id="name-filter" type="search" placeholder="搜索人员" /></div>
+            <div class="filter-reset"><button class="primary-button" id="clear-filters" type="button">清空筛选</button></div>
           </div>
         </div>
-        <div class="week-strip">
-          <article class="day-card"><span>周一</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card"><span>周二</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card"><span>周三</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card"><span>周四</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card active"><span>周五</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card"><span>周六</span><strong>-</strong><span>待同步</span></article>
-          <article class="day-card"><span>周日</span><strong>-</strong><span>待同步</span></article>
-        </div>
+        <a class="ghost-button" href="#details">人员明细</a>
       </section>
-
       <section class="layout">
         <section class="panel">
           <div class="panel-head">
-            <div class="panel-title">
-              <span class="panel-label">Coverage</span>
-              <h2>岗位覆盖</h2>
-              <p class="panel-note">计划人数、已排人数和缺口分开展示，接入真实数据后由排班源计算。</p>
-            </div>
+            <div class="panel-title"><span class="panel-label">Day</span><h2 id="day-title">当日状态</h2></div>
           </div>
-          <div class="coverage-grid">
-            <article class="coverage-card">
-              <header><strong>拆包</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-            <article class="coverage-card">
-              <header><strong>上下架</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-            <article class="coverage-card">
-              <header><strong>拣货</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-            <article class="coverage-card">
-              <header><strong>发货</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-            <article class="coverage-card">
-              <header><strong>移货</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-            <article class="coverage-card">
-              <header><strong>品控</strong><span class="tag warn">待同步</span></header>
-              <div class="coverage-numbers"><span>计划<b>-</b></span><span>已排<b>-</b></span><span>缺口<b>-</b></span></div>
-            </article>
-          </div>
+          <div class="shift-list" id="shift-list"></div>
         </section>
-
-        <aside class="panel">
+        <aside class="panel warning-panel">
           <div class="panel-head">
-            <div class="panel-title">
-              <span class="panel-label">Shifts</span>
-              <h2>今日班次</h2>
-              <p class="panel-note">接入真实排班源后，按班次展示人力分布并下钻到人员明细。</p>
-            </div>
+            <div class="panel-title"><span class="panel-label">Warnings</span><div class="warning-title-line"><h2>异常提醒</h2><p class="panel-note">列出迟到、缺卡等无法按出勤/休息/请假归类的人员</p></div></div>
+            <span class="warning-count" id="warning-count">-</span>
           </div>
-          <div class="shift-list">
-            <article class="shift-card">
-              <div class="time-block">-</div>
-              <div class="shift-main"><h3>暂无班次数据</h3><span class="shift-meta">等待真实排班源同步</span></div>
-              <span class="tag warn">待同步</span>
-            </article>
-          </div>
+          <div class="warning-list" id="warning-list"></div>
         </aside>
       </section>
-
-      <section class="layout">
+      <section>
         <section class="panel" id="details">
           <div class="panel-head">
-            <div class="panel-title">
-              <span class="panel-label">Details</span>
-              <h2>人员排班明细</h2>
-              <p class="panel-note">字段限定为排班源中应能维护的基础信息：日期、姓名、岗位、班次、时间、人员类型、状态和备注。</p>
+            <div class="panel-title"><span class="panel-label">Details</span><h2>人员考勤明细</h2></div>
+            <div class="detail-tools">
+              <span class="detail-count" id="detail-count">-</span>
+              <label class="detail-size" for="detail-limit">展示条数 <select id="detail-limit"><option value="50">50</option><option value="100">100</option><option value="200">200</option></select></label>
             </div>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>日期</th>
-                  <th>姓名</th>
-                  <th>岗位</th>
-                  <th>班次</th>
-                  <th>开始</th>
-                  <th>结束</th>
-                  <th>人员类型</th>
-                  <th>状态</th>
-                  <th>备注</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td colspan="9">暂无真实排班数据</td></tr>
-              </tbody>
-            </table>
+          <div class="table-wrap"><table><thead><tr><th>日期</th><th>姓名</th><th>状态</th><th>上班打卡</th><th>下班打卡</th><th>工时</th><th>加班</th><th>请假</th><th>异常</th></tr></thead><tbody id="detail-body"></tbody></table></div>
+          <div class="pager">
+            <span id="detail-page-info">-</span>
+            <div class="pager-actions">
+              <button class="mini-button" id="detail-prev" type="button">上一页</button>
+              <button class="mini-button" id="detail-next" type="button">下一页</button>
+            </div>
           </div>
         </section>
-
-        <aside class="panel">
-          <div class="panel-head">
-            <div class="panel-title">
-              <span class="panel-label">Warnings</span>
-              <h2>异常提醒</h2>
-              <p class="panel-note">接入真实排班源后，由同步脚本自动生成可人工复核的排班风险。</p>
-            </div>
-          </div>
-          <div class="warning-list">
-            <article class="warning-card"><strong>暂无异常提醒</strong><span class="muted">等待真实排班源同步后生成。</span></article>
-          </div>
-        </aside>
       </section>
     </main>
   </div>
-
-  <script>
-    document.querySelectorAll(".tab").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-      });
-    });
-  </script>
+  <script src="../../assets/scheduling-data.js"></script>
+  <script src="../../assets/scheduling-dashboard.js"></script>
 </body>
 </html>

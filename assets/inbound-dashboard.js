@@ -598,7 +598,7 @@
       <table><thead><tr><th>品牌</th>${businessTypes.map(type => `<th>${type}</th>`).join("")}<th>合计</th></tr></thead>
       <tbody>${brands.map(brand => `<tr><td><span class="brand-dot" style="background:${brandColors[brand]}"></span>${brand}</td>${businessTypes.map(type => {
         const qty = records.filter(row => row.brand === brand && row.businessType === type).reduce((sum, row) => sum + row.quantity, 0);
-        return `<td>${fmt(qty)} <span class="muted">${pct(qty, totalByBrand[brand])}</span></td>`;
+        return `<td><span class="matrix-value"><strong>${fmt(qty)}</strong><span class="matrix-share">${pct(qty, totalByBrand[brand])}</span></span></td>`;
       }).join("")}<td>${fmt(totalByBrand[brand])}</td></tr>`).join("")}</tbody></table>
     `;
   }
@@ -657,11 +657,12 @@
     ];
     const bucketRows = buckets.map(item => {
       const quantity = item.rows.reduce((sum, row) => sum + row.quantity, 0);
-      return `<div class="quality-line"><span>${item.label}</span><strong>${fmt(item.rows.length)} 单 · ${fmt(quantity)} 件</strong></div>`;
+      return `<div class="bucket-row"><span>${item.label}</span><strong>${fmt(item.rows.length)}单 <small>${fmt(quantity)}件</small></strong></div>`;
     }).join("");
+    $("orderStructure").classList.add("order-structure-grid");
     $("orderStructure").innerHTML = cards.map(item => `
       <div class="insight-card"><span>${item.label}</span><strong>${item.value}</strong><small>${item.note}</small></div>
-    `).join("") + `<div class="insight-card" style="grid-column:1/-1"><span>单量区间</span>${bucketRows}</div>`;
+    `).join("") + `<div class="insight-card order-buckets"><span>单量区间</span><div class="bucket-list">${bucketRows}</div></div>`;
   }
 
   function renderSupplierCoverage(records) {
@@ -943,6 +944,7 @@
   }
 
   let renderToken = 0;
+
   async function render() {
     const token = ++renderToken;
     await ensureCurrentRangeRecords();
@@ -970,6 +972,33 @@
     ensureWeeklyTrendRecords().then(() => {
       if (token === renderToken) renderWeeklyTrend();
     });
+  }
+
+  function resetFilters() {
+    Object.assign(state, {
+      selectedDate: payload.selectedDate,
+      range: "today",
+      customStart: "",
+      customEnd: "",
+      brand: "",
+      businessType: "",
+      supplier: "",
+      hour: "",
+      keyword: "",
+      qtyMin: "",
+      qtyMax: "",
+      issueBrand: "",
+      issueAttribute: "",
+      issueDate: "",
+      issueFactory: "",
+      issueKeyword: "",
+      issuePage: 1,
+      issuePageSize: 5,
+      notice: "",
+      page: 1
+    });
+    setSelectedDate(payload.selectedDate);
+    render();
   }
 
   function bindEvents() {
@@ -1142,25 +1171,8 @@
       state.page = 1;
       render();
     });
-    $("clearFilters").addEventListener("click", () => {
-      Object.assign(state, {
-        selectedDate: payload.selectedDate,
-        range: "today",
-        customStart: "",
-        customEnd: "",
-        brand: "",
-        businessType: "",
-        supplier: "",
-        hour: "",
-        keyword: "",
-        qtyMin: "",
-        qtyMax: "",
-        notice: "",
-        page: 1
-      });
-      setSelectedDate(payload.selectedDate);
-      render();
-    });
+    $("clearFilters").addEventListener("click", resetFilters);
+    $("resetFiltersTop").addEventListener("click", resetFilters);
     $("detailBody").addEventListener("click", event => {
       const target = event.target.closest("[data-order]");
       if (target) openOrder(target.dataset.order);
