@@ -1392,7 +1392,19 @@
     async function loadOutboundDaily(dateText) {
       window.__outboundDailyData = window.__outboundDailyData || {};
       if (window.__outboundDailyData[dateText]) return window.__outboundDailyData[dateText].records || [];
-      const ok = await loadScriptOnce(`../../assets/outbound/daily/${dateText}.js`, `outbound-${dateText}`, outboundLoadCache);
+      const cacheKey = `outbound-${dateText}`;
+      if (!outboundLoadCache.has(cacheKey)) {
+        outboundLoadCache.set(cacheKey, fetch(`../../assets/outbound/daily/${dateText}.json`)
+          .then(response => response.ok ? response.json() : null)
+          .then(data => {
+            if (data) window.__outboundDailyData[dateText] = data;
+            return data;
+          })
+          .catch(() => null));
+      }
+      const jsonData = await outboundLoadCache.get(cacheKey);
+      if (jsonData) return jsonData.records || [];
+      const ok = await loadScriptOnce(`../../assets/outbound/daily/${dateText}.js`, `${cacheKey}-script`, outboundLoadCache);
       if (!ok || !window.__outboundDailyData[dateText]) return [];
       return window.__outboundDailyData[dateText].records || [];
     }
