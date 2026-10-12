@@ -761,7 +761,7 @@
     .style-row strong { color: var(--ink); text-align: right; white-space: nowrap; }
     .coverage-table table { min-width: 980px; }
     .matrix {
-      overflow: auto;
+      overflow: hidden;
       border: 1px solid rgba(210,235,225,.18);
       border-radius: var(--radius-inner);
       background:
@@ -769,30 +769,41 @@
         rgba(5, 10, 12, .62);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.05), var(--module-shadow-soft);
     }
-    .matrix table { min-width: 520px; }
+    .matrix table { width: 100%; min-width: 0; table-layout: fixed; }
+    .matrix th, .matrix td { padding: 10px 8px; vertical-align: middle; }
+    .matrix th:first-child, .matrix td:first-child { width: 86px; }
+    .matrix th:last-child, .matrix td:last-child { width: 76px; }
     .matrix-value {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      min-height: 42px;
+      display: grid;
+      grid-template-rows: 20px 20px;
+      align-content: center;
+      justify-items: start;
+      gap: 2px;
       white-space: nowrap;
     }
     .matrix-value strong {
       color: var(--ink);
-      font-size: 15px;
-      line-height: 1.2;
+      font-size: 14px;
+      line-height: 1;
       font-weight: 900;
     }
+    .matrix-total {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
     .matrix-share {
-      min-height: 23px;
-      padding: 2px 7px;
+      min-height: 20px;
+      padding: 1px 6px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
       color: var(--accent-strong);
       background: rgba(110, 231, 210, 0.085);
       border: 1px solid rgba(110, 231, 210, 0.16);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 850;
       line-height: 1;
     }
@@ -1139,37 +1150,6 @@
         </section>
       </section>
 
-      <section class="insight-board">
-        <div class="insight-column">
-          <section class="panel">
-            <div class="panel-head">
-              <div><span class="panel-label">Compare</span><h2>品牌入库对比</h2></div>
-              <select id="brandCompareMetric">
-                <option value="quantity">入库数量</option>
-                <option value="orders">入库单数</option>
-                <option value="styles">款数</option>
-                <option value="suppliers">供应商数</option>
-              </select>
-            </div>
-            <div class="bars" id="brandCompare"></div>
-          </section>
-          <section class="panel">
-            <div class="panel-head">
-              <div><span class="panel-label">Order</span><h2>入库单结构</h2></div>
-            </div>
-            <div class="insight-grid" id="orderStructure"></div>
-          </section>
-        </div>
-        <div class="insight-column">
-          <section class="panel style-panel">
-            <div class="panel-head">
-              <div><span class="panel-label">Style</span><h2>款号集中度</h2></div>
-            </div>
-            <div class="style-list" id="styleFocus"></div>
-          </section>
-        </div>
-      </section>
-
       <section class="panel issue-panel">
         <div class="panel-head">
           <div><span class="panel-label">Quality Issues</span><h2>大货问题汇总</h2></div>
@@ -1200,6 +1180,37 @@
             <button class="ghost-button" type="button" id="issuePrevPage">上一页</button>
             <button class="ghost-button" type="button" id="issueNextPage">下一页</button>
           </div>
+        </div>
+      </section>
+
+      <section class="insight-board">
+        <div class="insight-column">
+          <section class="panel">
+            <div class="panel-head">
+              <div><span class="panel-label">Compare</span><h2>品牌入库对比</h2></div>
+              <select id="brandCompareMetric">
+                <option value="quantity">入库数量</option>
+                <option value="orders">入库单数</option>
+                <option value="styles">款数</option>
+                <option value="suppliers">供应商数</option>
+              </select>
+            </div>
+            <div class="bars" id="brandCompare"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head">
+              <div><span class="panel-label">Order</span><h2>入库单结构</h2></div>
+            </div>
+            <div class="insight-grid" id="orderStructure"></div>
+          </section>
+        </div>
+        <div class="insight-column">
+          <section class="panel style-panel">
+            <div class="panel-head">
+              <div><span class="panel-label">Style</span><h2>款号集中度</h2></div>
+            </div>
+            <div class="style-list" id="styleFocus"></div>
+          </section>
         </div>
       </section>
 
@@ -1280,8 +1291,8 @@
     </div>
     <div id="drawerContent"></div>
   </aside>
-  <script src="../../assets/inbound-data.js"></script>
-  <script src="../../assets/inbound-issues.js"></script>
-  <script src="../../assets/inbound-dashboard.js"></script>
+  <script src="../../assets/inbound-data.js?v=20261012-data-update"></script>
+  <script src="../../assets/inbound-issues.js?v=20261012-data-update"></script>
+  <script src="../../assets/inbound-dashboard.js?v=20261012-data-update"></script>
 </body>
 </html>

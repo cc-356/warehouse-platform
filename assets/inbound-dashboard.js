@@ -4,7 +4,6 @@
 (() => {
   const payload = window.INBOUND_DATA || { days: [], history: [], availableDates: [] };
   const issuePayload = window.INBOUND_ISSUES || { summary: {}, records: [] };
-  const dayLoaders = new Map();
   const params = new URLSearchParams(location.search);
   const brandColors = { "陈陈": "#6ee7d2", "鹭青一": "#9cc7ff", "周淼": "#e8c170", "未识别": "#ffb19b" };
   const businessTypes = ["成衣", "加工", "外采", "未标注"];
@@ -71,7 +70,7 @@
     return map;
   }, new Map());
 
-  function datesForCurrentRange() {
+  function recordsForDateRange() {
     if (!payload.days.length) return [];
     const selected = currentDay().date;
     let dates = [selected];
@@ -80,54 +79,7 @@
     if (state.range === "custom" && state.customStart && state.customEnd) {
       dates = payload.availableDates.filter(date => date >= state.customStart && date <= state.customEnd);
     }
-    return dates;
-  }
-
-  function weeklyTrendDates() {
-    const selectedIndex = Math.max(0, payload.availableDates.indexOf(state.selectedDate));
-    return payload.availableDates.slice(selectedIndex, selectedIndex + 7).reverse();
-  }
-
-  function recordsForDateRange() {
-    const dates = datesForCurrentRange();
     return payload.days.filter(day => dates.includes(day.date)).flatMap(day => day.records);
-  }
-
-  async function loadDayRecords(date) {
-    const day = dayByDate(date);
-    if (!date || !day || (Array.isArray(day.records) && day.records.length)) return true;
-    if (dayLoaders.has(date)) return dayLoaders.get(date);
-    const file = payload.recordFiles?.[date] || `../../assets/inbound/inbound-records-${date}.json`;
-    const loader = fetch(file)
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
-      .then(data => {
-        day.records = Array.isArray(data.records) ? data.records : [];
-        return true;
-      })
-      .catch(error => {
-        console.error(error);
-        day.records = [];
-        return false;
-      });
-    dayLoaders.set(date, loader);
-    return loader;
-  }
-
-  async function ensureCurrentRangeRecords() {
-    const dates = datesForCurrentRange();
-    if (!dates.length) return;
-    const statusNode = $("importStatus");
-    if (statusNode) statusNode.innerHTML = `<span>Loading ${dates.length} day(s)...</span>`;
-    await Promise.all(dates.map(loadDayRecords));
-  }
-
-  async function ensureWeeklyTrendRecords() {
-    const dates = weeklyTrendDates();
-    if (!dates.length) return;
-    await Promise.all(dates.map(loadDayRecords));
   }
 
   function filteredRecords() {
@@ -149,7 +101,13 @@
         row.defectIssue.includes(keyword)
       );
     }
-    return rows;
+    return rows.sort((a, b) =>
+      String(b.date || "").localeCompare(String(a.date || "")) ||
+      String(a.brand || "").localeCompare(String(b.brand || ""), "zh-Hans-CN") ||
+      String(a.factory || "").localeCompare(String(b.factory || ""), "zh-Hans-CN") ||
+      String(a.styleNo || "").localeCompare(String(b.styleNo || "")) ||
+      String(a.recordId || "").localeCompare(String(b.recordId || ""))
+    );
   }
 
   function filterRecords(records, options = {}) {
@@ -594,12 +552,13 @@
 
   function renderMatrix(records) {
     const totalByBrand = Object.fromEntries(brands.map(brand => [brand, summary(records.filter(row => row.brand === brand)).quantity]));
+    const matrixBusinessTypes = businessTypes.filter(type => type !== "未标注");
     $("brandBusinessMatrix").innerHTML = `
-      <table><thead><tr><th>品牌</th>${businessTypes.map(type => `<th>${type}</th>`).join("")}<th>合计</th></tr></thead>
-      <tbody>${brands.map(brand => `<tr><td><span class="brand-dot" style="background:${brandColors[brand]}"></span>${brand}</td>${businessTypes.map(type => {
+      <table><thead><tr><th>品牌</th>${matrixBusinessTypes.map(type => `<th>${type}</th>`).join("")}<th>合计</th></tr></thead>
+      <tbody>${brands.map(brand => `<tr><td><span class="brand-dot" style="background:${brandColors[brand]}"></span>${brand}</td>${matrixBusinessTypes.map(type => {
         const qty = records.filter(row => row.brand === brand && row.businessType === type).reduce((sum, row) => sum + row.quantity, 0);
         return `<td><span class="matrix-value"><strong>${fmt(qty)}</strong><span class="matrix-share">${pct(qty, totalByBrand[brand])}</span></span></td>`;
-      }).join("")}<td>${fmt(totalByBrand[brand])}</td></tr>`).join("")}</tbody></table>
+      }).join("")}<td><span class="matrix-total">${fmt(totalByBrand[brand])}</span></td></tr>`).join("")}</tbody></table>
     `;
   }
 
@@ -943,12 +902,7 @@
     history.replaceState(null, "", url);
   }
 
-  let renderToken = 0;
-
-  async function render() {
-    const token = ++renderToken;
-    await ensureCurrentRangeRecords();
-    if (token !== renderToken) return;
+  function render() {
     syncUrl();
     const day = currentDay();
     const rangeRecords = recordsForDateRange();
@@ -969,9 +923,6 @@
     renderSuppliers(rows);
     renderDetails(rows);
     renderIssuePanel();
-    ensureWeeklyTrendRecords().then(() => {
-      if (token === renderToken) renderWeeklyTrend();
-    });
   }
 
   function resetFilters() {
@@ -1204,3 +1155,4 @@
   bindEvents();
   render();
 })();
+
