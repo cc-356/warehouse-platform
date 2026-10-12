@@ -600,6 +600,42 @@
         font-size: 46px;
       }
     }
+
+    /* Supplier network: flowing connections and staggered resource pulses. */
+    .pattern-suppliers .supplier-flow {
+      stroke-dasharray: 8 92;
+      animation: supplierFlow 2.8s linear infinite;
+      opacity: .85;
+    }
+    .pattern-suppliers .flow-secondary { animation-delay: -.9s; }
+    .pattern-suppliers .flow-tertiary { animation-delay: -1.8s; }
+    .pattern-suppliers .supplier-node, .pattern-suppliers .supplier-halo {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .pattern-suppliers .supplier-node { animation: supplierNodePulse 2.6s ease-in-out infinite; }
+    .pattern-suppliers .node-secondary { animation-delay: -.65s; }
+    .pattern-suppliers .node-tertiary { animation-delay: -1.3s; }
+    .pattern-suppliers .node-backup { animation-delay: -1.95s; }
+    .pattern-suppliers .supplier-halo { animation: supplierHalo 2.6s ease-out infinite; }
+    .module-card:hover .pattern-suppliers .supplier-flow,
+    .module-card:focus-visible .pattern-suppliers .supplier-flow { animation-duration: 1.3s; }
+    .module-card:hover .pattern-suppliers .supplier-node,
+    .module-card:focus-visible .pattern-suppliers .supplier-node { animation-duration: 1.6s; }
+    @keyframes supplierFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100; } }
+    @keyframes supplierNodePulse {
+      0%, 100% { opacity: .62; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.13); }
+    }
+    @keyframes supplierHalo {
+      0% { opacity: .6; transform: scale(.85); }
+      80%, 100% { opacity: 0; transform: scale(1.5); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pattern-suppliers .supplier-flow,
+      .pattern-suppliers .supplier-node,
+      .pattern-suppliers .supplier-halo { animation: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -785,6 +821,24 @@
                 <circle class="motion-node" cx="50" cy="36" r="3" fill="#d71920" opacity=".62"/>
                 <circle class="motion-node" cx="69" cy="52" r="3" fill="currentColor" opacity=".42"/>
                 <path d="M32 18 V10 M88 18 V10" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </span>
+          </a>
+          <a class="module-card" data-mark="供" href="modules/suppliers/index.html">
+            <strong>供应商管理</strong>
+            <p>资源库、产能画像、需求匹配与主备梯队</p>
+            <span class="module-pattern pattern-suppliers" aria-hidden="true">
+              <svg viewBox="0 0 120 72" fill="none">
+                <path d="M60 18 L24 50 M60 18 L96 50 M24 50 H96 M60 28 V43" stroke="currentColor" stroke-width="1.1" opacity=".45"/>
+                <path class="supplier-flow" d="M60 18 L24 50" pathLength="100" stroke="currentColor" stroke-width="2"/>
+                <path class="supplier-flow flow-secondary" d="M60 18 L96 50" pathLength="100" stroke="currentColor" stroke-width="2"/>
+                <path class="supplier-flow flow-tertiary" d="M24 50 H96" pathLength="100" stroke="currentColor" stroke-width="2"/>
+                <circle class="supplier-halo" cx="60" cy="18" r="13" stroke="currentColor" opacity=".4"/>
+                <circle class="supplier-node supplier-hub" cx="60" cy="18" r="10" stroke="currentColor" stroke-width="1.4"/>
+                <circle class="supplier-node node-secondary" cx="24" cy="50" r="9" stroke="currentColor"/>
+                <circle class="supplier-node node-tertiary" cx="96" cy="50" r="9" stroke="currentColor"/>
+                <circle class="supplier-node node-backup" cx="60" cy="50" r="7" stroke="currentColor"/>
+                <circle cx="60" cy="18" r="3" fill="#d71920"/>
               </svg>
             </span>
           </a>

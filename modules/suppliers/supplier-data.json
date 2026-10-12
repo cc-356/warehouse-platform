@@ -1,0 +1,95 @@
+{
+  "revision": 12,
+  "state": {
+    "version": 1,
+    "suppliers": [
+      {
+        "type": "外采",
+        "status": "合作中",
+        "region": "山东",
+        "tax": "A级纳税人",
+        "id": "SUP-MV3FHY90",
+        "employees": 117,
+        "machines": null,
+        "area": 10000,
+        "dailyCapacityMin": 300,
+        "dailyCapacityMax": 1000,
+        "utilization": 95,
+        "categories": [
+          "毛衫"
+        ],
+        "strengths": "",
+        "supplyScale": "",
+        "moq": 200,
+        "leadDays": null,
+        "availableCapacity": 99999,
+        "availableAsOf": "2026-10-11",
+        "availableUntil": "2027-03-13",
+        "priceMin": 0,
+        "priceMax": null,
+        "specialization": 88,
+        "delivery": 90,
+        "quality": 80,
+        "cost": 75,
+        "cooperation": 76,
+        "priority": 98,
+        "categoryRatings": {},
+        "evidence": "",
+        "extra": {},
+        "brands": [
+          "周淼",
+          "鹭青一"
+        ],
+        "name": "英伦纺织"
+      },
+      {
+        "type": "加工",
+        "status": "合作中",
+        "region": "杭州",
+        "tax": "",
+        "id": "SUP-MV3KVPC6",
+        "brands": [
+          "周淼",
+          "鹭青一"
+        ],
+        "employees": 73,
+        "machines": 55,
+        "area": 1700,
+        "dailyCapacityMin": 300,
+        "dailyCapacityMax": 800,
+        "utilization": 95,
+        "categories": [
+          "风衣"
+        ],
+        "strengths": "",
+        "supplyScale": "",
+        "moq": 50,
+        "leadDays": null,
+        "availableCapacity": null,
+        "availableAsOf": "",
+        "availableUntil": "",
+        "specialization": 80,
+        "delivery": 90,
+        "quality": 80,
+        "cost": 75,
+        "cooperation": 89,
+        "priority": 88,
+        "categoryRatings": {},
+        "evidence": "",
+        "extra": {},
+        "name": "双迪",
+        "priceMin": null,
+        "priceMax": null
+      }
+    ],
+    "tiers": {},
+    "weights": {
+      "specialization": 25,
+      "delivery": 25,
+      "quality": 20,
+      "cost": 15,
+      "cooperation": 10,
+      "priority": 5
+    }
+  }
+}
