@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "historyMode": "daily-complete-snapshots",
-  "latestSourceFile": "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003821.xlsx",
+  "latestSourceFile": "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261011_paged_20261012112150.xlsx",
   "sourceFiles": [
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20260724132240_179709390_1.xlsx",
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20260728171117_180670842_1.xlsx",
@@ -81,7 +81,8 @@
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261007_paged_20261008003006.xlsx",
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261008_paged_20261009094526.xlsx",
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261009_paged_20261010003659.xlsx",
-    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003821.xlsx"
+    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003821.xlsx",
+    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261011_paged_20261012112150.xlsx"
   ],
   "availableSourceFiles": [
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20260724132240_179709390_1.xlsx",
@@ -165,7 +166,8 @@
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261009_paged_20261010003659.xlsx",
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003622.xlsx",
     "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003712.xlsx",
-    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003821.xlsx"
+    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261010_paged_20261011003821.xlsx",
+    "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261011_paged_20261012112150.xlsx"
   ],
   "snapshots": [
     {
@@ -878,11 +880,20 @@
       "voidedOrders": 21183,
       "pendingOrders": 535,
       "sourceMtime": "2026-10-11 00:39:48"
+    },
+    {
+      "date": "2026-10-11",
+      "sourceFile": "D:\\仓储运营管理平台\\聚水潭导出数据\\销售出库单_20261011_paged_20261012112150.xlsx",
+      "recordCount": 46892,
+      "shippedOrders": 20509,
+      "voidedOrders": 26173,
+      "pendingOrders": 210,
+      "sourceMtime": "2026-10-12 11:23:27"
     }
   ],
-  "generatedAt": "2026-10-12 00:33:03",
-  "latestDate": "2026-10-10",
-  "recordCount": 1293374,
+  "generatedAt": "2026-10-12 11:24:49",
+  "latestDate": "2026-10-11",
+  "recordCount": 1340266,
   "warnings": [],
   "snapshotDataPath": "assets/outbound/snapshots",
   "snapshotFiles": {
@@ -964,6 +975,7 @@
     "2026-10-07": "assets/outbound/snapshots/2026-10-07.json",
     "2026-10-08": "assets/outbound/snapshots/2026-10-08.json",
     "2026-10-09": "assets/outbound/snapshots/2026-10-09.json",
-    "2026-10-10": "assets/outbound/snapshots/2026-10-10.json"
+    "2026-10-10": "assets/outbound/snapshots/2026-10-10.json",
+    "2026-10-11": "assets/outbound/snapshots/2026-10-11.json"
   }
 }

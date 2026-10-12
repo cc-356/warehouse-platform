@@ -1436,7 +1436,7 @@
     async function loadOutboundDaily(dateText) {
       window.__outboundDailyData = window.__outboundDailyData || {};
       if (window.__outboundDailyData[dateText]) return window.__outboundDailyData[dateText].records || [];
-      if (dateText > "2026-10-10") return [];
+      if (dateText > "2026-10-11") return [];
       try {
         window.__outboundDailyData[dateText] = await fetchPublishedJson('../../assets/outbound/daily/' + dateText + '.json');
       } catch { return []; }
